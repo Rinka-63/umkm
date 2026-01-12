@@ -78,3 +78,32 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/owner/riwayat', [OwnerController::class, 'index'])->name('owner.riwayat');
 
 });
+
+Route::get('/gas-login-semua', function () {
+    $users = [
+        [
+            'username' => 'owner',
+            'password' => Hash::make('owner123'),
+            'role' => 'owner'
+        ],
+        [
+            'username' => 'admin',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin'
+        ],
+        [
+            'username' => 'kasir',
+            'password' => Hash::make('kasir123'),
+            'role' => 'kasir'
+        ],
+    ];
+
+    foreach ($users as $userData) {
+        \App\Models\User::updateOrCreate(
+            ['email' => $userData['email']],
+            $userData
+        );
+    }
+
+    return "Tiga user (Owner, Admin, Kasir) berhasil dibuat! Silakan login.";
+});
