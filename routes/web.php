@@ -99,8 +99,9 @@ Route::get('/gas-login-semua', function () {
     ];
 
     foreach ($users as $userData) {
+        // Kita gunakan 'role' sebagai kunci unik untuk membuat user
         \App\Models\User::updateOrCreate(
-            ['email' => $userData['email']],
+            ['role' => $userData['role']], 
             $userData
         );
     }
