@@ -391,6 +391,7 @@
                                         <th class="py-3 border-0">Stok</th>
                                         <th class="py-3 border-0">Harga Jual</th>
                                         <th class="py-3 border-0">Status</th>
+                                        <th class="py-3 border-0 text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -411,9 +412,69 @@
                                                 <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aman</span>
                                             @endif
                                         </td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $barang->id }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </button>
+                                                <form action="{{ url('admin/barang/hapus/'.$barang->id) }}" method="POST" onsubmit="return confirm('Hapus barang ini?')">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
+
+                                    {{-- MODAL EDIT BARANG (Diletakkan di dalam loop agar ID unik) --}}
+                                    @push('modals')
+                                    <div class="modal fade" id="modalEdit{{ $barang->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow" style="border-radius: 20px;">
+                                                <div class="modal-header border-0 pb-0">
+                                                    <h5 class="fw-bold">Edit Barang</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <form action="{{ url('admin/barang/update/'.$barang->id) }}" method="POST">
+                                                    @csrf @method('PUT')
+                                                    <div class="modal-body text-start">
+                                                        <div class="mb-3">
+                                                            <label class="form-label small fw-bold">Nama Barang</label>
+                                                            <input type="text" name="nama_barang" class="form-control rounded-3" value="{{ $barang->nama_barang }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label small fw-bold">Supplier</label>
+                                                            <select name="supplier_id" class="form-select rounded-3" required>
+                                                                @foreach($data_supplier as $s)
+                                                                    <option value="{{ $s->id }}" {{ $barang->supplier_id == $s->id ? 'selected' : '' }}>
+                                                                        {{ $s->nama_supplier }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6 mb-3">
+                                                                <label class="form-label small fw-bold">Stok</label>
+                                                                <input type="number" name="stok" class="form-control rounded-3" value="{{ $barang->stok }}" required>
+                                                            </div>
+                                                            <div class="col-6 mb-3">
+                                                                <label class="form-label small fw-bold">Harga Jual</label>
+                                                                <input type="number" name="harga_jual" class="form-control rounded-3" value="{{ $barang->harga_jual }}" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer border-0 pt-0">
+                                                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Update Barang</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endpush
                                     @empty
-                                    <tr><td colspan="5" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
+                                    <tr><td colspan="6" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
