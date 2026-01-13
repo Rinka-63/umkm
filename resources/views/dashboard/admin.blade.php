@@ -215,36 +215,33 @@
                             </li>
                             <div style="max-height: 300px; overflow-y: auto;">
                         <div style="max-height: 300px; overflow-y: auto;">
-    <ul class="list-unstyled">
-        @forelse($notif_list as $n)
-            <li class="p-3 mb-2 small rounded border-start border-4 border-danger bg-white shadow-sm">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <div class="fw-bold text-dark mb-1">
-                            {{-- Cara 1: Menggunakan null safe operator (PHP 8+) --}}
-                            {{ $n->barang?->nama_barang ?? 'Data Tidak Terbaca' }}
-                            
-                            {{-- Tambahkan ini untuk melihat apakah objek barang benar-benar kosong di web --}}
-                            @if(!$n->barang)
-                                <small class="text-danger d-block">Web gagal load relasi untuk ID: {{ $n->barang_id }}</small>
-                            @endif
+                            <ul class="list-unstyled">
+                                @forelse($notif_list as $n)
+                                    <li class="p-3 mb-2 small rounded border-start border-4 border-danger bg-white shadow-sm">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <div class="fw-bold text-dark mb-1">
+                                                    {{ $n->barang?->nama_barang ?? 'Data Tidak Terbaca' }}
+                                                    @if(!$n->barang)
+                                                        <small class="text-danger d-block">Web gagal load relasi untuk ID: {{ $n->barang_id }}</small>
+                                                    @endif
+                                                </div>
+                                                <div class="text-muted">
+                                                    Stok tersisa: <span class="text-danger fw-bold">{{ $n->stok_sekarang }}</span>
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">
+                                                {{ $n->created_at->diffForHumans() }}
+                                            </small>
+                                        </div>
+                                    </li>
+                                @empty
+                                    <li class="p-4 text-center text-muted small">
+                                        Semua stok dalam kondisi aman
+                                    </li>
+                                @endforelse
+                            </ul>
                         </div>
-                        <div class="text-muted">
-                            Stok tersisa: <span class="text-danger fw-bold">{{ $n->stok_sekarang }}</span>
-                        </div>
-                    </div>
-                    <small class="text-muted">
-                        {{ $n->created_at->diffForHumans() }}
-                    </small>
-                </div>
-            </li>
-        @empty
-            <li class="p-4 text-center text-muted small">
-                Semua stok dalam kondisi aman
-            </li>
-        @endforelse
-    </ul>
-</div>
                     </div>
                         </ul>
                     </div>
@@ -491,7 +488,7 @@
                                     <tr>
                                         <td class="ps-4 text-muted">#{{ $s->id }}</td>
                                         <td><div class="fw-bold">{{ $s->nama_supplier }}</div></td>
-                                        <td>{{ $s->kontak }}</td>
+                                        <td>{{ $s->no_hp }}</td>
                                         <td>{{ $s->alamat }}</td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
@@ -508,6 +505,7 @@
                                         </td>
                                     </tr>
 
+                                    @push('modals')
                                     <div class="modal fade" id="modalEditSupplier{{ $s->id }}" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered text-start">
                                             <div class="modal-content border-0 shadow" style="border-radius: 20px;">
@@ -524,7 +522,7 @@
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label small fw-bold">Kontak</label>
-                                                            <input type="text" name="kontak" class="form-control rounded-3" value="{{ $s->kontak }}" required>
+                                                            <input type="text" name="no_hp" class="form-control rounded-3" value="{{ $s->kontak }}" required>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label small fw-bold">Alamat</label>
@@ -539,6 +537,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endpush
                                     @empty
                                     <tr><td colspan="5" class="text-center py-5 text-muted">Belum ada data supplier.</td></tr>
                                     @endforelse
@@ -563,7 +562,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label small fw-bold">Kontak / No. HP</label>
-                                            <input type="text" name="kontak" class="form-control rounded-3" placeholder="0812..." required>
+                                            <input type="text" name="no_hp" class="form-control rounded-3" placeholder="0812..." required>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label small fw-bold">Alamat</label>
@@ -878,6 +877,6 @@
                 });
             };
         </script>
-
+    @stack('modals')
     </body>
 </html>

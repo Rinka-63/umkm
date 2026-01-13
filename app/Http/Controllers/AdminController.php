@@ -137,7 +137,7 @@ public function index(Request $request) // Tambahkan Request $request di sini
 
     // --- LOGIKA SUPPLIER ---
     public function storeSupplier(Request $request) {
-        $request->validate(['nama_supplier' => 'required', 'kontak' => 'required', 'alamat' => 'required']);
+        $request->validate(['nama_supplier' => 'required', 'no_hp' => 'required', 'alamat' => 'required']);
         Supplier::create($request->all());
         return redirect()->back()->with('success', 'Supplier berhasil ditambah!');
     }
