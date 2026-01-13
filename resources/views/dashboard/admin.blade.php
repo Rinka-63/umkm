@@ -707,14 +707,14 @@
                         <!-- TAB -->
                         <ul class="nav nav-pills mb-4 d-print-none">
                             <li class="nav-item">
-                                <button class="nav-link active rounded-pill px-4"
+                                <button class="nav-link {{ !request('bulan') ? 'active' : '' }} rounded-pill px-4"
                                     data-bs-toggle="pill"
                                     data-bs-target="#laporan-stok">
                                     Rekap Inventaris
                                 </button>
                             </li>
                             <li class="nav-item">
-                                <button class="nav-link rounded-pill px-4"
+                                <button class="nav-link {{ request('bulan') ? 'active' : '' }} rounded-pill px-4"
                                     data-bs-toggle="pill"
                                     data-bs-target="#laporan-mutasi">
                                     Mutasi Stok
@@ -724,8 +724,7 @@
 
                         <div class="tab-content">
                                 <!-- ================= TAB 1 : REKAP INVENTARIS ================= -->
-                        <div class="tab-pane fade show active" id="laporan-stok">
-
+                        <div class="tab-pane fade {{ !request('bulan') ? 'show active' : '' }}" id="laporan-stok">
                             @isset($barangs)
 
                             <div class="summary-box mb-4">
@@ -791,21 +790,48 @@
 
 
                             <!-- ================= TAB 2 : MUTASI STOK ================= -->
-                            <div class="tab-pane fade" id="laporan-mutasi">
+                            <div class="tab-pane fade {{ request('bulan') ? 'show active' : '' }}" id="laporan-mutasi">
 
-                                <div class="filter-section no-print">
+                                <div class="filter-section no-print mb-4">
                                     <form method="GET" action="{{ url()->current() }}" class="row g-3 align-items-end">
                                         <div class="col-md-3">
-                                            <label class="form-label fw-bold small">Periode</label>
-                                            <input type="month" class="form-control shadow-sm" name="bulan" 
-                                                value="{{ request('bulan', date('Y-m')) }}">
+                                            <label class="form-label fw-bold small text-muted">Bulan</label>
+                                            <div class="input-group shadow-sm">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="fa-solid fa-calendar-day text-primary"></i>
+                                                </span>
+                                                <select name="bulan" class="form-select border-start-0 ps-0">
+                                                    @for($m=1; $m<=12; $m++)
+                                                        <option value="{{ $m }}" {{ request('bulan', date('m')) == $m ? 'selected' : '' }}>
+                                                            {{ Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                                                        </option>
+                                                    @endfor
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-md-3 d-flex gap-2">
-                                            <button type="submit" class="btn btn-primary w-100 shadow-sm">
-                                                <i class="fa-solid fa-filter me-1"></i> Filter
+
+                                        <div class="col-md-2">
+                                            <label class="form-label fw-bold small text-muted">Tahun</label>
+                                            <div class="input-group shadow-sm">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="fa-solid fa-calendar text-primary"></i>
+                                                </span>
+                                                <select name="tahun" class="form-select border-start-0 ps-0">
+                                                    @for($y=date('Y'); $y>=date('Y')-5; $y--)
+                                                        <option value="{{ $y }}" {{ request('tahun', date('Y')) == $y ? 'selected' : '' }}>
+                                                            {{ $y }}
+                                                        </option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary px-4 shadow-sm d-flex align-items-center">
+                                                <i class="fa-solid fa-filter me-2"></i> Terapkan Filter
                                             </button>
-                                            <a href="{{ url()->current() }}" class="btn btn-outline-secondary w-100 shadow-sm">
-                                                <i class="fa-solid fa-rotate-left me-1"></i> Reset
+                                            <a href="{{ route('admin.laporan') }}" class="btn btn-light border px-4 shadow-sm d-flex align-items-center">
+                                                <i class="fa-solid fa-rotate-left me-2"></i> Reset
                                             </a>
                                         </div>
                                     </form>

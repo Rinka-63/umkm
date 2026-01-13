@@ -16,6 +16,38 @@ class AdminController extends Controller
     // --- NAVIGASI UTAMA ---
 public function index(Request $request) // Tambahkan Request $request di sini
 {
+    $bulanInput = $request->get('bulan', date('Y-m'));
+    $bulan = $request->get('bulan', date('m'));
+    $tahun = $request->get('tahun', date('Y'));
+
+    $laporans = Barang::all()->map(function ($barang) use ($tahun, $bulan) {
+        $masuk = BarangMasuk::where('barang_id', $barang->id)
+                    ->whereYear('tanggal', $tahun)
+                    ->whereMonth('tanggal', $bulan)
+                    ->sum('jumlah');
+
+        // Ambil total keluar (penjualan) di bulan tersebut
+        $keluar = PenjualanDetail::where('barang_id', $barang->id)
+                    ->whereYear('created_at', $tahun)
+                    ->whereMonth('created_at', $bulan)
+                    ->sum('qty');
+
+        // Logika Stok Akhir: ini adalah angka asli di database
+        $stok_akhir = $barang->stok; 
+        
+        // Logika Stok Awal (mundur): Stok Sekarang - Masuk + Keluar
+        $stok_awal = $stok_akhir - $masuk + $keluar;
+
+        return (object) [
+            'nama_barang' => $barang->nama_barang,
+            'stok_awal'   => $stok_awal,
+            'qty_masuk'   => $masuk,
+            'qty_keluar'  => $keluar,
+            'stok_akhir'  => $stok_akhir,
+            'harga'       => $barang->harga_jual
+        ];
+    });
+
     // 1. Logika Filter Penjualan (Pindahkan dari fungsi penjualan ke sini)
     $query_penjualan = PenjualanDetail::with('barang')->orderBy('created_at', 'desc');
     
@@ -52,7 +84,7 @@ public function index(Request $request) // Tambahkan Request $request di sini
         return $barang->stok * $barang->harga_jual;
     });
 
-    $laporans = Barang::select('nama_barang', 'stok as stok_awal', 'stok as stok_akhir', 'harga_jual as harga')->get();
+    $laporans_stok = Barang::select('nama_barang', 'stok as stok_awal', 'stok as stok_akhir', 'harga_jual as harga')->get();
     $all_barangs = Barang::orderBy('nama_barang')->get();
 
     $transaksis = PenjualanDetail::with(['barang', 'penjualan.user'])
@@ -82,7 +114,8 @@ public function index(Request $request) // Tambahkan Request $request di sini
         'grafik', 'data_barang','data_barang_tersedia', 'data_supplier', 
         'notif_count', 'notif_list','data_penjualan',
         'laporan_stok', 'laporan_penjualan','all_barangs','laporans',
-        'transaksis','barangs','total_aset','suppliers','total_terjual'
+        'transaksis','barangs','total_aset','suppliers','total_terjual','bulanInput',
+        'laporans_stok'
     ));
 }
 
@@ -95,7 +128,18 @@ public function index(Request $request) // Tambahkan Request $request di sini
             'supplier_id' => 'required|exists:suppliers,id',
         ]);
 
+        // 1. Simpan ke tabel barangs
         $barang = Barang::create($request->all());
+
+        // 2. CATAT KE TABEL BARANG_MASUK sebagai riwayat mutasi
+        BarangMasuk::create([
+            'barang_id'   => $barang->id,
+            'supplier_id' => $request->supplier_id,
+            'user_id'     => auth()->id(),
+            'jumlah'      => $request->stok, // pastikan nama kolom di DB adalah 'jumlah'
+            'tanggal'     => now(),
+            'harga_beli'  => $request->harga_jual,
+        ]);
 
         // CEK STOK: Jika stok awal yang diinput sudah menipis (<= 5)
         if ($barang->stok <= 5) {
@@ -110,26 +154,41 @@ public function index(Request $request) // Tambahkan Request $request di sini
 
     public function updateBarang(Request $request, $id) {
         $barang = Barang::findOrFail($id);
+        
+        // 1. Simpan stok lama sebelum diupdate
+        $stokLama = $barang->stok;
+        $stokBaru = $request->stok;
+
+        // 2. Jalankan update data barang
         $barang->update($request->all());
 
-        // CEK STOK: Jika setelah diupdate stoknya menipis
+        // 3. LOGIKA MUTASI: Jika stok bertambah, catat ke BarangMasuk
+        if ($stokBaru > $stokLama) {
+            $selisih = $stokBaru - $stokLama;
+            
+            BarangMasuk::create([
+                'barang_id'   => $barang->id,
+                'supplier_id' => $barang->supplier_id,
+                'user_id'     => auth()->id(),
+                'jumlah'      => $selisih, // Catat hanya selisihnya saja
+                'tanggal'     => now(),
+                'harga_beli'  => $barang->harga_jual,
+                
+            ]);
+        }
+
+        // 4. Cek Notifikasi (Kode Anda yang sudah ada)
         if ($barang->stok <= 5) {
             NotifikasiStok::updateOrCreate(
                 ['barang_id' => $barang->id],
-                [
-                    'stok_sekarang' => $barang->stok,
-                    'is_read' => false,
-                    'updated_at' => now() // Agar notif naik ke paling atas
-                ]
+                ['stok_sekarang' => $barang->stok, 'is_read' => false, 'updated_at' => now()]
             );
         } else {
-            // OPSIONAL: Hapus notifikasi jika stok sudah ditambah (tidak menipis lagi)
             NotifikasiStok::where('barang_id', $barang->id)->delete();
         }
 
-        return redirect()->back()->with('success', 'Barang berhasil diupdate!');
+        return redirect()->back()->with('success', 'Barang berhasil diupdate dan mutasi dicatat!');
     }
-
     public function destroyBarang($id) {
         Barang::destroy($id);
         return redirect()->back()->with('success', 'Barang berhasil dihapus!');

@@ -45,7 +45,6 @@ Route::middleware(['auth'])->group(function () {
     // Aksi Transaksi
     Route::get('/admin/penjualan', [AdminController::class, 'laporanPenjualan'])->name('admin.laporan.penjualan');
     
-
     // Aksi Laporan
     Route::post('/admin/barang/simpan', [AdminController::class, 'storeBarang'])->name('barang.store');
     Route::put('/admin/barang/update/{id}', [AdminController::class, 'updateBarang'])->name('barang.update');

@@ -5,8 +5,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class BarangMasuk extends Model
 {
-    protected $table = 'barang_masuk';
-    protected $fillable = ['barang_id', 'supplier_id', 'user_id', 'jumlah', 'harga_belitanggal'];
+    protected $table = 'barang_masuk'; 
+
+    protected $fillable = [
+        'barang_id', 
+        'supplier_id', 
+        'user_id', 
+        'jumlah', 
+        'tanggal', 
+        'harga_beli'
+    ];
 
     public function barang()
     {
