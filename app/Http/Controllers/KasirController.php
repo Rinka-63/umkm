@@ -6,40 +6,45 @@ use App\Models\Barang;
 use App\Models\Penjualan;
 use App\Models\PenjualanDetail;
 use App\Models\Supplier;
+use App\Models\NotifikasiStok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use Illuminate\Support\Str;
 
 class KasirController extends Controller
 {
+    // =========================================================================
+    // 1. DASHBOARD UTAMA (INDEX)
+    // =========================================================================
     public function index(Request $request)
     {
-        $total_barang = Barang::count();
+        // --- Statistik Ringkas Dashboard ---
+        $total_barang   = Barang::count();
         $total_supplier = Supplier::count();
-        $rusak = Barang::where('stok', '<=', 5)->count();
-        $baik = Barang::where('stok', '>', 5)->count();
-        $grafik = Barang::orderBy('stok', 'desc')->take(5)->get();
+        $rusak          = Barang::where('stok', '<=', 5)->count();
+        $baik           = Barang::where('stok', '>', 5)->count();
+        $grafik         = Barang::orderBy('stok', 'desc')->take(5)->get();
 
-        $data_barang = Barang::latest()->get();
-        $data_supplier = Supplier::latest()->get();
+        // --- Data Master ---
+        $data_supplier  = Supplier::latest()->get();
+        $barangs        = Barang::where('stok', '>', 0)->get(); // Barang untuk pilihan kasir
+        $suppliers      = \App\Models\Supplier::withCount('barangs')->get();
 
-        $barangs = Barang::where('stok', '>', 0)->get();
+        // --- Riwayat Transaksi Penjualan ---
         $transaksis = PenjualanDetail::with('barang','penjualan')
-                  ->orderBy('created_at', 'desc')
-                  ->get();
+                        ->orderBy('created_at', 'desc')
+                        ->get();
         
-        $suppliers = \App\Models\Supplier::withCount('barangs')->get();
-    
-        // Mengambil data barang berdasarkan filter supplier jika ada
-        $supplierId = request('supplier_id');
+        // --- Filter Data Barang (Berdasarkan Supplier) ---
+        $supplierId  = request('supplier_id');
         $data_barang = \App\Models\Barang::when($supplierId, function($query) use ($supplierId) {
             return $query->where('supplier_id', $supplierId);
         })->get();
 
+        // --- Filter Volume Terjual (Berdasarkan Range Tanggal) ---
         $from = $request->from;
-        $to = $request->to;
+        $to   = $request->to;
 
-        // 2. Hitung Total Volume Terjual
         $total_terjual = PenjualanDetail::when($from && $to, function($query) use ($from, $to) {
                 return $query->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59']);
             })
@@ -52,13 +57,19 @@ class KasirController extends Controller
         )); 
     }
 
-    // Fungsi Simpan Transaksi Penjualan
+    // =========================================================================
+    // 2. PROSES TRANSAKSI PENJUALAN
+    // =========================================================================
+    
+    // Form Tambah Transaksi
     public function create() {
         $barangs = Barang::where('stok', '>', 0)->get();
         return view('dashboard.kasir', compact('barangs'));
     }
 
-    public function storePenjualan(Request $request) {
+    // Simpan Transaksi ke Database
+    public function storePenjualan(Request $request) 
+    {
         $request->validate([
             'nama_pembeli' => 'required|string|max:255',
             'barang_id'    => 'required|exists:barangs,id',
@@ -67,7 +78,7 @@ class KasirController extends Controller
 
         $barang = Barang::findOrFail($request->barang_id);
 
-        // Cek stok
+        // Validasi Ketersediaan Stok
         if ($barang->stok < $request->jumlah) {
             return redirect()->back()->with('error', 'Stok ' . $barang->nama_barang . ' tidak cukup!');
         }
@@ -76,10 +87,10 @@ class KasirController extends Controller
             DB::transaction(function () use ($request, $barang) {
                 $total_harga = $barang->harga_jual * $request->jumlah;
                 
-                // Generate Kode Transaksi Otomatis (Contoh: TRX-20231027-001)
+                // Generate Kode Transaksi Otomatis
                 $kode_transaksi = 'TRX-' . date('Ymd') . '-' . strtoupper(Str::random(5));
 
-                // 1. Simpan ke tabel Penjualan (Data Pembeli)
+                // 1. Simpan Header Penjualan
                 $penjualan = Penjualan::create([
                     'kode_transaksi' => $kode_transaksi,
                     'nama_pembeli'   => $request->nama_pembeli,
@@ -88,7 +99,7 @@ class KasirController extends Controller
                     'user_id'        => auth()->id(), 
                 ]);
 
-                // 2. Simpan ke tabel Penjualan_Detail
+                // 2. Simpan Detail Item Penjualan
                 PenjualanDetail::create([
                     'penjualan_id' => $penjualan->id,
                     'barang_id'    => $request->barang_id,
@@ -97,8 +108,16 @@ class KasirController extends Controller
                     'subtotal'     => $total_harga,
                 ]);
 
-                // 3. Potong Stok Barang
+                // 3. Update Stok Barang (Potong Stok)
                 $barang->decrement('stok', $request->jumlah);
+
+                // --- Bonus: Cek jika stok setelah dipotong menjadi menipis ---
+                if ($barang->stok <= 5) {
+                    NotifikasiStok::updateOrCreate(
+                        ['barang_id' => $barang->id],
+                        ['stok_sekarang' => $barang->stok, 'is_read' => false]
+                    );
+                }
             });
 
             return redirect()->back()->with('success', 'Transaksi berhasil disimpan!');
@@ -108,18 +127,23 @@ class KasirController extends Controller
         }
     }
 
-        public function laporan(Request $request)
+    // =========================================================================
+    // 3. LAPORAN PENDAPATAN KASIR
+    // =========================================================================
+    public function laporan(Request $request)
     {
-        // Ambil tanggal dari request, jika kosong gunakan hari ini
+        // Filter Berdasarkan Tanggal (Default: Hari Ini)
         $tanggal = $request->get('tanggal', date('Y-m-d'));
 
+        // Ambil Data Penjualan Kasir yang sedang login pada tanggal terpilih
         $laporan_hari_ini = PenjualanDetail::with(['barang', 'penjualan'])
             ->whereHas('penjualan', function($query) use ($tanggal) {
                 $query->where('user_id', auth()->id())
-                    ->whereDate('created_at', $tanggal);
+                      ->whereDate('created_at', $tanggal);
             })
             ->get();
 
+        // Hitung Total Pendapatan dari Subtotal
         $total_pendapatan = $laporan_hari_ini->sum('subtotal');
 
         return view('dashboard.kasir', compact('laporan_hari_ini', 'total_pendapatan', 'tanggal'));
