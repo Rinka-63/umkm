@@ -6,6 +6,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OwnerController;
+use App\Exports\RiwayatPenjualanExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
 
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
@@ -64,6 +67,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/penjualan/store', [KasirController::class, 'storePenjualan'])->name('penjualan.store');
     Route::get('/admin/penjualan', [KasirController::class, 'index'])
     ->name('admin.penjualan');
+    Route::get('/kasir/export-excel', function (Request $request) {
+        $from = $request->get('from');
+        $to = $request->get('to');
+        
+        $nama_file = 'riwayat-penjualan';
+        if($from && $to) $nama_file .= '-' . $from . '-to-' . $to;
+        
+        return Excel::download(new RiwayatPenjualanExport($from, $to), $nama_file . '.xlsx');
+    })->name('kasir.export');
 
     // Aksi Laporan
     Route::get('/kasir/laporan', [KasirController::class, 'laporan'])->name('kasir.laporan');
@@ -77,3 +89,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/owner/riwayat', [OwnerController::class, 'index'])->name('owner.riwayat');
 
 });
+

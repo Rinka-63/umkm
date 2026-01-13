@@ -436,9 +436,11 @@
                             </div>
                             <div class="d-flex gap-2">
 
-                                <button class="btn btn-success rounded-pill px-3 py-2 shadow-sm">
-                                    <i class="fa-solid fa-file-excel me-1"></i> Export Excel
-                                </button>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ route('kasir.export', request()->all()) }}" class="btn btn-success rounded-pill px-3 py-2 shadow-sm">
+                                        <i class="fa-solid fa-file-excel me-1"></i> Export Excel
+                                    </a>
+                                </div>
                             </div>
                         </div>
 
