@@ -20,7 +20,7 @@
         .hero-section {
             height: 100vh;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
-                        url('https://images.unsplash.com/photo-1553413766-47583c4511f4?auto=format&fit=crop&q=80&w=2000');
+                        url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2000');
             background-size: cover;
             background-position: center;
             display: flex;
