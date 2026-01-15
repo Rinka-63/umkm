@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/supplier', [AdminController::class, 'index'])->name('admin.supplier');
     Route::get('/admin/riwayat', [AdminController::class, 'index'])->name('admin.riwayat');
     Route::get('/admin/laporan', [AdminController::class, 'index'])->name('admin.laporan');
+    Route::get('/mark-as-read', [AdminController::class, 'markAsRead'])->name('markAsRead');
 
     // Aksi Barang
     Route::post('/admin/barang/simpan', [AdminController::class, 'storeBarang']);

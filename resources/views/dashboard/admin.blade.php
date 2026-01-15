@@ -28,8 +28,10 @@
             .wrapper { 
                 flex: 1 0 auto; 
                 padding: 25px; 
-                width: 100%; }
-
+                width: 100%; 
+                overflow: visible !important;
+            }
+                
             .navbar-card {
                 background: var(--glass-bg); 
                 backdrop-filter: blur(15px); 
@@ -40,6 +42,8 @@
                 justify-content: space-between;
                 box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
                 border: 1px solid rgba(255,255,255,0.3);
+                position: relative;
+                z-index: 1050 !important;
             }
             .nav-link-item {
                 color: #4b5563; 
@@ -71,6 +75,7 @@
                 height: 100%; 
                 transition: 0.3s; 
                 box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                z-index: 1;
             }
             .stat-card:hover { 
                 transform: translateY(-5px); 
@@ -94,6 +99,7 @@
                 padding: 30px; 
                 border: none; 
                 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                z-index: 1;
             }
 
             .table thead th {
@@ -158,6 +164,24 @@
                     box-shadow: none !important;
                     border: none !important;
                 }
+            }
+            .dropdown-menu {
+                z-index: 9999 !important;
+                position: absolute !important;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+            .alert {
+                z-index: 1000 !important;
+            }
+            .modal {
+                z-index: 2000 !important;
+            }
+            .modal-backdrop {
+                z-index: 1990 !important;
+            }
+            .nav-item.dropdown {
+                position: relative;
+                z-index: 10000;
             }
         </style>
     </head>
@@ -957,18 +981,22 @@
                     }
                 });
 
-
-                function hilangkanAngka() {
-    // 1. Hilangkan badge di tampilan secara instan
-    const badge = document.getElementById('badge-count');
-    if (badge) badge.style.display = 'none';
-
-    // 2. Kirim perintah ke server untuk update is_read = true
-    fetch("{{ route('notif.markRead') }}")
-        .then(response => response.json())
-        .then(data => console.log("Notif ditandai dibaca"));
-}
-                            };
+            };
+            function hilangkanAngka() {
+                // 1. Kirim perintah ke server untuk menandai sudah dibaca
+                fetch("{{ route('markAsRead') }}")
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // 2. Sembunyikan badge angka merah di lonceng
+                            const badge = document.querySelector('.badge.bg-danger');
+                            if (badge) {
+                                badge.style.display = 'none';
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
         </script>
     @stack('modals')
     </body>
