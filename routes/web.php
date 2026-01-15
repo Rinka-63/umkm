@@ -10,7 +10,9 @@ use App\Exports\RiwayatPenjualanExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
-Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/', function () { return view('welcome');})->name('welcome');
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -52,6 +54,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/barang/simpan', [AdminController::class, 'storeBarang'])->name('barang.store');
     Route::put('/admin/barang/update/{id}', [AdminController::class, 'updateBarang'])->name('barang.update');
     Route::delete('/admin/barang/hapus/{id}', [AdminController::class, 'destroyBarang'])->name('barang.destroy');
+
+    Route::get('/notif-mark-read', [AdminController::class, 'markAsRead'])->name('notif.markRead');
 });
 
 // Group Route khusus Kasir

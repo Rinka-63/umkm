@@ -79,8 +79,12 @@ class AdminController extends Controller
         // --- Data Master & Notifikasi ---
         $data_barang    = Barang::latest()->get();
         $data_supplier  = Supplier::latest()->get();
-        $notif_count    = $rusak;
-        $notif_list     = NotifikasiStok::with('barang')->latest()->orderBy('created_at', 'desc')->get();
+        $notif_list     = NotifikasiStok::with('barang')
+                        ->whereHas('barang')
+                        ->where('is_read', false) 
+                        ->latest()
+                        ->get();
+        $notif_count    = $notif_list->count();
 
         // --- Data Laporan Lain-lain ---
         $data_penjualan       = Penjualan::latest()->get();
@@ -108,8 +112,7 @@ class AdminController extends Controller
         // --- Pengembalian View ---
         return view('dashboard.admin', compact(
             'total_barang', 'total_supplier', 'rusak', 'baik', 
-            'grafik', 'data_barang', 'data_barang_tersedia', 'data_supplier', 
-            'notif_count', 'notif_list', 'data_penjualan',
+            'grafik', 'data_barang', 'data_barang_tersedia', 'data_supplier', 'notif_list','notif_count', 'data_penjualan',
             'laporan_stok', 'laporan_penjualan', 'all_barangs', 'laporans',
             'transaksis', 'barangs', 'total_aset', 'suppliers', 'total_terjual', 
             'bulanInput', 'laporans_stok', 'from', 'to', 'bulan', 'tahun'
@@ -189,7 +192,10 @@ class AdminController extends Controller
 
     public function destroyBarang($id) 
     {
-        Barang::destroy($id);
+        DB::transaction(function () use ($id) {
+            NotifikasiStok::where('barang_id', $id)->delete();
+            Barang::destroy($id);
+        });
         return redirect()->back()->with('success', 'Barang berhasil dihapus!');
     }
 
@@ -226,5 +232,12 @@ class AdminController extends Controller
                       ->get();
 
         return view('dashboard.admin', compact('transaksis'));
+    }
+
+    
+    // Fungsi baru untuk menghilangkan angka saat lonceng diklik
+    public function markAsRead() {
+        NotifikasiStok::where('is_read', false)->update(['is_read' => true]);
+        return response()->json(['success' => true]);
     }
 }

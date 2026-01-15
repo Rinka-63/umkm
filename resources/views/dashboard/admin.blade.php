@@ -202,49 +202,43 @@
                 
                 <div class="d-flex align-items-center gap-3">
                     <div class="dropdown">
-                        <div class="position-relative cursor-pointer" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-bell fs-5 text-secondary"></i>
+                        <div class="position-relative cursor-pointer" 
+                            id="bellIcon" 
+                            data-bs-toggle="dropdown" 
+                            onclick="hilangkanAngka()" 
+                            style="cursor: pointer;">
+                            <i class="fa-solid fa-bell fs-4 text-secondary"></i>
                             @if($notif_count > 0)
-                                <span class="notif-pulse"></span>
+                                <span id="badge-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                    {{ $notif_count }}
+                                </span>
                             @endif
                         </div>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3 p-2" style="width: 300px; border-radius: 15px;">
-                            <li class="p-2 fw-bold border-bottom mb-2 text-primary d-flex justify-content-between">
-                                <span>Pemberitahuan Stok</span>
-                                <span class="badge bg-primary-subtle text-primary rounded-pill">{{ $notif_count }}</span>
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3 p-0" style="width: 320px; border-radius: 12px;">
+                            <li class="bg-primary p-3 rounded-top text-white">
+                                <h6 class="mb-0">Pemberitahuan Stok</h6>
                             </li>
                             <div style="max-height: 300px; overflow-y: auto;">
-                        <div style="max-height: 300px; overflow-y: auto;">
-                            <ul class="list-unstyled">
                                 @forelse($notif_list as $n)
-                                    <li class="p-3 mb-2 small rounded border-start border-4 border-danger bg-white shadow-sm">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <div class="fw-bold text-dark mb-1">
-                                                    {{ $n->barang?->nama_barang ?? 'Data Tidak Terbaca' }}
-                                                    @if(!$n->barang)
-                                                        <small class="text-danger d-block">Web gagal load relasi untuk ID: {{ $n->barang_id }}</small>
-                                                    @endif
-                                                </div>
-                                                <div class="text-muted">
-                                                    Stok tersisa: <span class="text-danger fw-bold">{{ $n->stok_sekarang }}</span>
-                                                </div>
-                                            </div>
-                                            <small class="text-muted">
-                                                {{ $n->created_at->diffForHumans() }}
-                                            </small>
+                                    <li class="p-3 border-bottom">
+                                        {{-- Pastikan menggunakan $n->barang->nama_barang --}}
+                                        <div class="fw-bold small text-dark">
+                                            {{ $n->barang->nama_barang ?? 'Barang Tidak Ditemukan' }}
                                         </div>
+                                        <div class="text-muted small">
+                                            Stok tersisa: <span class="text-danger fw-bold">{{ $n->stok_sekarang }}</span>
+                                        </div>
+                                        <small class="text-muted">{{ $n->created_at->diffForHumans() }}</small>
                                     </li>
                                 @empty
-                                    <li class="p-4 text-center text-muted small">
-                                        Semua stok dalam kondisi aman
-                                    </li>
+                                    <li class="p-4 text-center text-muted small">Semua stok aman</li>
                                 @endforelse
-                            </ul>
-                        </div>
-                    </div>
+                            </div>
                         </ul>
                     </div>
+
+
 
                     <div class="ps-3 border-start d-flex align-items-center gap-3">
                         <div class="text-end d-none d-sm-block">
@@ -962,7 +956,19 @@
                         }
                     }
                 });
-            };
+
+
+                function hilangkanAngka() {
+    // 1. Hilangkan badge di tampilan secara instan
+    const badge = document.getElementById('badge-count');
+    if (badge) badge.style.display = 'none';
+
+    // 2. Kirim perintah ke server untuk update is_read = true
+    fetch("{{ route('notif.markRead') }}")
+        .then(response => response.json())
+        .then(data => console.log("Notif ditandai dibaca"));
+}
+                            };
         </script>
     @stack('modals')
     </body>
