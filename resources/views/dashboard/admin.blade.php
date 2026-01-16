@@ -152,24 +152,7 @@
                     border: none !important;
                 }
             }
-            .dropdown-menu {
-                z-index: 9999 !important;
-                position: absolute !important;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            }
-            .alert {
-                z-index: 1000 !important;
-            }
-            .modal {
-                z-index: 2000 !important;
-            }
-            .modal-backdrop {
-                z-index: 1990 !important;
-            }
-            .nav-item.dropdown {
-                position: relative;
-                z-index: 10000;
-            }
+            
         </style>
     </head>
     <body>
@@ -232,31 +215,62 @@
                 @if(request()->is('admin/beranda'))
                     <div class="row g-4 mb-4">
                         <div class="col-md-3">
-                            <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">DATA BARANG</p><h3 class="fw-bold m-0">{{ $total_barang ?? 0 }}</h3></div>
-                                <div class="icon-box bg-primary-subtle text-primary"><i class="fa-solid fa-laptop"></i></div>
-                            </div>
+                            <a href="{{ route('admin.barang') }}" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">DATA BARANG</p>
+                                        <h3 class="fw-bold m-0">{{ $total_barang ?? 0 }}</h3>
+                                    </div>
+                                    <div class="icon-box bg-primary-subtle text-primary">
+                                        <i class="fa-solid fa-laptop"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
+
                         <div class="col-md-3">
-                            <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p><h3 class="fw-bold m-0">{{ $total_supplier ?? 0 }}</h3></div>
-                                <div class="icon-box bg-success-subtle text-success"><i class="fa-solid fa-truck"></i></div>
-                            </div>
+                            <a href="{{ route('admin.supplier') }}" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p>
+                                        <h3 class="fw-bold m-0">{{ $total_supplier ?? 0 }}</h3>
+                                    </div>
+                                    <div class="icon-box bg-success-subtle text-success">
+                                        <i class="fa-solid fa-truck"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
+
                         <div class="col-md-3">
-                            <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p><h3 class="fw-bold m-0 text-info">{{ $total_terjual ?? 0 }}</h3></div>
-                                <div class="icon-box bg-info-subtle text-info"><i class="fa-solid fa-cart-shopping"></i></div>
-                            </div>
+                            <a href="{{ route('admin.riwayat') }}" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p>
+                                        <h3 class="fw-bold m-0 text-info">{{ $total_terjual ?? 0 }}</h3>
+                                    </div>
+                                    <div class="icon-box bg-info-subtle text-info">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
+
                         <div class="col-md-3">
-                            <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
-                                <div><p class="text-muted small fw-bold mb-1">STOK KRITIS</p><h3 class="fw-bold m-0 text-danger">{{ $rusak ?? 0 }}</h3></div>
-                                <div class="icon-box bg-danger-subtle text-danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                            </div>
+                            <a href="{{ route('admin.barang', ['status' => 'kritis']) }}" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">STOK KRITIS</p>
+                                        <h3 class="fw-bold m-0 text-danger">{{ $rusak ?? 0 }}</h3>
+                                    </div>
+                                    <div class="icon-box bg-danger-subtle text-danger">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-
+                    
                     <div class="row g-4">
                         <div class="col-lg-8">
                             <div class="stat-card">
@@ -293,16 +307,20 @@
                                     </div>
                                     <div>
                                         <h4 class="fw-bold text-dark mb-0">
-                                            {{ request('supplier_id') ? ($data_barang->first()?->supplier?->nama_supplier ?? 'Detail Barang') : 'Pilih Supplier' }}
+                                            @if(request('status') == 'kritis')
+                                                Daftar Stok Kritis
+                                            @elseif(request('supplier_id'))
+                                                {{ $data_barang->first()?->supplier?->nama_supplier ?? 'Detail Barang' }}
+                                            @else
+                                                Pilih Supplier
+                                            @endif
                                         </h4>
                                         <p class="text-muted small mb-0">Pantau stok berdasarkan sumber pengiriman barang</p>
                                     </div>
                                 </div>
 
                                 <div class="d-flex gap-2">
-                                    @if(request('supplier_id'))
-                                    @else
-                                        {{-- Tombol Tambah Barang HANYA muncul di halaman pertama (Pilih Supplier) --}}
+                                    @if(!request('supplier_id') && request('status') != 'kritis')
                                         <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
                                             <i class="fa-solid fa-plus me-2"></i>Tambah Barang
                                         </button>
@@ -312,143 +330,171 @@
                         </div>
                         <div style="height: 4px; background: linear-gradient(to right, #0d6efd, #6610f2);"></div>
                     </div>
-                
 
-                    <!-- Kotak Supplier -->
-                    @if(!request('supplier_id'))
+                    <!-- Daftar Supplier -->
+                    @if(!request('supplier_id') && request('status') != 'kritis')
                         <div class="row g-3">
                             @foreach($suppliers as $s)
-                            <div class="col-md-4">
-                                <a href="{{ url('admin/barang?supplier_id='.$s->id) }}" class="text-decoration-none">
-                                    <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
-                                                <i class="fa-solid fa-truck-ramp-box fs-3"></i>
-                                            </div>
-                                            <div>
-                                                <h5 class="fw-bold mb-0 text-dark">{{ $s->nama_supplier }}</h5>
-                                                <span class="badge bg-light text-dark border mt-1">
-                                                    {{ $s->barangs_count }} Jenis Barang
-                                                </span>
+                                <div class="col-md-4">
+                                    <a href="{{ url('admin/barang?supplier_id='.$s->id) }}" class="text-decoration-none">
+                                        <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
+                                                    <i class="fa-solid fa-truck-ramp-box fs-3"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="fw-bold mb-0 text-dark">{{ $s->nama_supplier }}</h5>
+                                                    <span class="badge bg-light text-dark border mt-1">
+                                                        {{ $s->barangs_count }} Jenis Barang
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </div>
+                                    </a>
+                                </div>
                             @endforeach
                         </div>
 
-                    <!-- Tabel barang -->
-                    @else
-                    <div class="mb-3">
-                        <a href="{{ url('admin/barang') }}" class="btn btn-sm btn-primary border rounded-pill px-3">
-                            <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
-                        </a>
-                    </div>
-
-                    <div class="stat-card border-0 shadow-sm p-4 bg-white rounded-4">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th class="py-3 ps-4 border-0">ID</th>
-                                        <th class="py-3 border-0">Nama Barang</th>
-                                        <th class="py-3 border-0">Stok</th>
-                                        <th class="py-3 border-0">Harga Jual</th>
-                                        <th class="py-3 border-0">Status</th>
-                                        <th class="py-3 border-0 text-center">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($data_barang as $barang)
-                                    <tr>
-                                        <td class="ps-4 fw-bold text-muted">#{{ $barang->id }}</td>
-                                        <td class="fw-semibold {{ $barang->stok <= 5 ? 'text-danger' : 'text-dark' }}">
-                                            {{ $barang->nama_barang }}
-                                        </td>
-                                        <td>
-                                            <span class="fw-bold {{ $barang->stok <= 5 ? 'text-danger' : 'text-dark' }}">
-                                                {{ $barang->stok }} <small class="text-muted">Unit</small>
-                                            </span>
-                                        </td>
-                                        <td class="text-success fw-bold">Rp {{ number_format($barang->harga_jual, 0, ',', '.') }}</td>
-                                        <td>
-                                            @if($barang->stok <= 5)
-                                                <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Kritis</span>
-                                            @else
-                                                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aman</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="d-flex justify-content-center gap-2">
-                                                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $barang->id }}">
-                                                    <i class="fa-solid fa-pen"></i>
-                                                </button>
-                                                <form action="{{ url('admin/barang/hapus/'.$barang->id) }}" method="POST" onsubmit="return confirm('Hapus barang ini?')">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle">
-                                                        <i class="fa-solid fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Modal Edit -->
-                                    @push('modals')
-                                    <div class="modal fade" id="modalEdit{{ $barang->id }}" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content border-0 shadow" style="border-radius: 20px;">
-                                                <div class="modal-header border-0 pb-0">
-                                                    <h5 class="fw-bold">Edit Barang</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <form action="{{ url('admin/barang/update/'.$barang->id) }}" method="POST">
-                                                    @csrf @method('PUT')
-                                                    <div class="modal-body text-start">
-                                                        <div class="mb-3">
-                                                            <label class="form-label small fw-bold">Nama Barang</label>
-                                                            <input type="text" name="nama_barang" class="form-control rounded-3" value="{{ $barang->nama_barang }}" required>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label small fw-bold">Supplier</label>
-                                                            <select name="supplier_id" class="form-select rounded-3" required>
-                                                                @foreach($data_supplier as $s)
-                                                                    <option value="{{ $s->id }}" {{ $barang->supplier_id == $s->id ? 'selected' : '' }}>
-                                                                        {{ $s->nama_supplier }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-6 mb-3">
-                                                                <label class="form-label small fw-bold">Stok</label>
-                                                                <input type="number" name="stok" class="form-control rounded-3" value="{{ $barang->stok }}" required>
-                                                            </div>
-                                                            <div class="col-6 mb-3">
-                                                                <label class="form-label small fw-bold">Harga Jual</label>
-                                                                <input type="number" name="harga_jual" class="form-control rounded-3" value="{{ $barang->harga_jual }}" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer border-0 pt-0">
-                                                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Update Barang</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endpush
-                                    @empty
-                                    <tr><td colspan="6" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                    <!-- Tabel Barang -->
+                    @elseif(request('supplier_id'))
+                        <div class="mb-3">
+                            <a href="{{ url('admin/barang') }}" class="btn btn-sm btn-primary border rounded-pill px-3">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
+                            </a>
                         </div>
-                    </div>
+                        <div class="stat-card border-0 shadow-sm p-4 bg-white rounded-4">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="py-3 ps-4 border-0">ID</th>
+                                            <th class="py-3 border-0">Nama Barang</th>
+                                            <th class="py-3 border-0">Stok</th>
+                                            <th class="py-3 border-0">Harga Jual</th>
+                                            <th class="py-3 border-0">Status</th>
+                                            <th class="py-3 border-0 text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($data_barang as $barang)
+                                            <tr>
+                                                <td class="ps-4 fw-bold text-muted">#{{ $barang->id }}</td>
+                                                <td class="fw-semibold {{ $barang->stok <= 5 ? 'text-danger' : 'text-dark' }}">{{ $barang->nama_barang }}</td>
+                                                <td>
+                                                    <span class="fw-bold {{ $barang->stok <= 5 ? 'text-danger' : 'text-dark' }}">
+                                                        {{ $barang->stok }} <small class="text-muted">Unit</small>
+                                                    </span>
+                                                </td>
+                                                <td class="text-success fw-bold">Rp {{ number_format($barang->harga_jual, 0, ',', '.') }}</td>
+                                                <td>
+                                                    <span class="badge {{ $barang->stok <= 5 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success' }} px-3 py-2 rounded-pill">
+                                                        {{ $barang->stok <= 5 ? 'Kritis' : 'Aman' }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex justify-content-center gap-2">
+                                                        <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $barang->id }}">
+                                                            <i class="fa-solid fa-pen"></i>
+                                                        </button>
+                                                        <form action="{{ url('admin/barang/hapus/'.$barang->id) }}" method="POST">
+                                                            @csrf @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="return confirm('Hapus?')">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Modal Edit -->
+                                            @push('modals')
+                                                <div class="modal fade" id="modalEdit{{ $barang->id }}" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content border-0 shadow" style="border-radius: 20px;">
+                                                            <div class="modal-header border-0 pb-0">
+                                                                <h5 class="fw-bold">Edit Barang</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <form action="{{ url('admin/barang/update/'.$barang->id) }}" method="POST">
+                                                                @csrf @method('PUT')
+                                                                <div class="modal-body text-start">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label small fw-bold">Nama Barang</label>
+                                                                        <input type="text" name="nama_barang" class="form-control rounded-3" value="{{ $barang->nama_barang }}" required>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label small fw-bold">Supplier</label>
+                                                                        <select name="supplier_id" class="form-select rounded-3">
+                                                                            @foreach($data_supplier as $s)
+                                                                                <option value="{{ $s->id }}" {{ $barang->supplier_id == $s->id ? 'selected' : '' }}>{{ $s->nama_supplier }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6 mb-3">
+                                                                            <label class="form-label small fw-bold">Stok</label>
+                                                                            <input type="number" name="stok" class="form-control rounded-3" value="{{ $barang->stok }}" required>
+                                                                        </div>
+                                                                        <div class="col-6 mb-3">
+                                                                            <label class="form-label small fw-bold">Harga Jual</label>
+                                                                            <input type="number" name="harga_jual" class="form-control rounded-3" value="{{ $barang->harga_jual }}" required>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer border-0 pt-0">
+                                                                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+                                                                    <button type="submit" class="btn btn-primary rounded-pill px-4">Update Barang</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endpush
+                                        @empty
+                                            <tr><td colspan="6" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    <!-- Stok Kritis -->
+                    @elseif(request('status') == 'kritis')
+                        <div class="mb-3">
+                            <a href="{{ url('admin/barang') }}" class="btn btn-sm btn-primary border rounded-pill px-3">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Menu Utama
+                            </a>
+                        </div>
+                        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="fw-bold mb-0 text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Daftar Stok Hampir Habis</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="ps-4">Nama Barang</th>
+                                                <th>Stok Tersisa</th>
+                                                <th>Supplier</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($barangs as $item)
+                                                <tr>
+                                                    <td class="ps-4 fw-semibold">{{ $item->nama_barang }}</td>
+                                                    <td><span class="badge bg-danger px-3 py-2 rounded-pill">{{ $item->stok }} Unit</span></td>
+                                                    <td>{{ $item->supplier->nama_supplier ?? '-' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     @endif
 
+                    <!-- MODAL TAMBAH -->
                     <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content border-0 shadow" style="border-radius: 20px;">
@@ -471,7 +517,7 @@
                                             <div class="col-6 mb-3"><label class="form-label small fw-bold">Harga Jual</label><input type="number" name="harga_jual" class="form-control rounded-3" required></div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer border-0 pt-0 text-center">
+                                    <div class="modal-footer border-0 pt-0">
                                         <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
                                         <button type="submit" class="btn btn-primary rounded-pill px-4">Simpan Barang</button>
                                     </div>
@@ -479,6 +525,7 @@
                             </div>
                         </div>
                     </div>
+
                 @endif
 
                 <!-- Supplier -->

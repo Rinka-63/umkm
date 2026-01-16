@@ -152,24 +152,7 @@
                     border: none !important;
                 }
             }
-            .dropdown-menu {
-                z-index: 9999 !important;
-                position: absolute !important;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            }
-            .alert {
-                z-index: 1000 !important;
-            }
-            .modal {
-                z-index: 2000 !important;
-            }
-            .modal-backdrop {
-                z-index: 1990 !important;
-            }
-            .nav-item.dropdown {
-                position: relative;
-                z-index: 10000;
-            }
+            
         </style>
     </head>
     <body>
@@ -232,31 +215,62 @@
                 <?php if(request()->is('admin/beranda')): ?>
                     <div class="row g-4 mb-4">
                         <div class="col-md-3">
-                            <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">DATA BARANG</p><h3 class="fw-bold m-0"><?php echo e($total_barang ?? 0); ?></h3></div>
-                                <div class="icon-box bg-primary-subtle text-primary"><i class="fa-solid fa-laptop"></i></div>
-                            </div>
+                            <a href="<?php echo e(route('admin.barang')); ?>" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">DATA BARANG</p>
+                                        <h3 class="fw-bold m-0"><?php echo e($total_barang ?? 0); ?></h3>
+                                    </div>
+                                    <div class="icon-box bg-primary-subtle text-primary">
+                                        <i class="fa-solid fa-laptop"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
+
                         <div class="col-md-3">
-                            <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p><h3 class="fw-bold m-0"><?php echo e($total_supplier ?? 0); ?></h3></div>
-                                <div class="icon-box bg-success-subtle text-success"><i class="fa-solid fa-truck"></i></div>
-                            </div>
+                            <a href="<?php echo e(route('admin.supplier')); ?>" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p>
+                                        <h3 class="fw-bold m-0"><?php echo e($total_supplier ?? 0); ?></h3>
+                                    </div>
+                                    <div class="icon-box bg-success-subtle text-success">
+                                        <i class="fa-solid fa-truck"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
+
                         <div class="col-md-3">
-                            <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p><h3 class="fw-bold m-0 text-info"><?php echo e($total_terjual ?? 0); ?></h3></div>
-                                <div class="icon-box bg-info-subtle text-info"><i class="fa-solid fa-cart-shopping"></i></div>
-                            </div>
+                            <a href="<?php echo e(route('admin.riwayat')); ?>" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p>
+                                        <h3 class="fw-bold m-0 text-info"><?php echo e($total_terjual ?? 0); ?></h3>
+                                    </div>
+                                    <div class="icon-box bg-info-subtle text-info">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
+
                         <div class="col-md-3">
-                            <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
-                                <div><p class="text-muted small fw-bold mb-1">STOK KRITIS</p><h3 class="fw-bold m-0 text-danger"><?php echo e($rusak ?? 0); ?></h3></div>
-                                <div class="icon-box bg-danger-subtle text-danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                            </div>
+                            <a href="<?php echo e(route('admin.barang', ['status' => 'kritis'])); ?>" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">STOK KRITIS</p>
+                                        <h3 class="fw-bold m-0 text-danger"><?php echo e($rusak ?? 0); ?></h3>
+                                    </div>
+                                    <div class="icon-box bg-danger-subtle text-danger">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-
+                    
                     <div class="row g-4">
                         <div class="col-lg-8">
                             <div class="stat-card">
@@ -285,6 +299,7 @@
                         </div>
                     <?php endif; ?>
 
+                    
                     <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between align-items-center">
@@ -294,17 +309,22 @@
                                     </div>
                                     <div>
                                         <h4 class="fw-bold text-dark mb-0">
-                                            <?php echo e(request('supplier_id') ? ($data_barang->first()?->supplier?->nama_supplier ?? 'Detail Barang') : 'Pilih Supplier'); ?>
+                                            <?php if(request('status') == 'kritis'): ?>
+                                                Daftar Stok Kritis
+                                            <?php elseif(request('supplier_id')): ?>
+                                                <?php echo e($data_barang->first()?->supplier?->nama_supplier ?? 'Detail Barang'); ?>
 
+                                            <?php else: ?>
+                                                Pilih Supplier
+                                            <?php endif; ?>
                                         </h4>
                                         <p class="text-muted small mb-0">Pantau stok berdasarkan sumber pengiriman barang</p>
                                     </div>
                                 </div>
 
                                 <div class="d-flex gap-2">
-                                    <?php if(request('supplier_id')): ?>
-                                    <?php else: ?>
-                                        
+                                    
+                                    <?php if(!request('supplier_id') && request('status') != 'kritis'): ?>
                                         <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
                                             <i class="fa-solid fa-plus me-2"></i>Tambah Barang
                                         </button>
@@ -314,145 +334,172 @@
                         </div>
                         <div style="height: 4px; background: linear-gradient(to right, #0d6efd, #6610f2);"></div>
                     </div>
-                
 
                     
-                    <?php if(!request('supplier_id')): ?>
+                    <?php if(!request('supplier_id') && request('status') != 'kritis'): ?>
                         <div class="row g-3">
                             <?php $__currentLoopData = $suppliers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="col-md-4">
-                                <a href="<?php echo e(url('admin/barang?supplier_id='.$s->id)); ?>" class="text-decoration-none">
-                                    <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
-                                                <i class="fa-solid fa-truck-ramp-box fs-3"></i>
-                                            </div>
-                                            <div>
-                                                <h5 class="fw-bold mb-0 text-dark"><?php echo e($s->nama_supplier); ?></h5>
-                                                <span class="badge bg-light text-dark border mt-1">
-                                                    <?php echo e($s->barangs_count); ?> Jenis Barang
-                                                </span>
+                                <div class="col-md-4">
+                                    <a href="<?php echo e(url('admin/barang?supplier_id='.$s->id)); ?>" class="text-decoration-none">
+                                        <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
+                                                    <i class="fa-solid fa-truck-ramp-box fs-3"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="fw-bold mb-0 text-dark"><?php echo e($s->nama_supplier); ?></h5>
+                                                    <span class="badge bg-light text-dark border mt-1">
+                                                        <?php echo e($s->barangs_count); ?> Jenis Barang
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </div>
+                                    </a>
+                                </div>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
 
                     
-                    <?php else: ?>
-                    <div class="mb-3">
-                        <a href="<?php echo e(url('admin/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
-                            <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
-                        </a>
-                    </div>
-
-                    <div class="stat-card border-0 shadow-sm p-4 bg-white rounded-4">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th class="py-3 ps-4 border-0">ID</th>
-                                        <th class="py-3 border-0">Nama Barang</th>
-                                        <th class="py-3 border-0">Stok</th>
-                                        <th class="py-3 border-0">Harga Jual</th>
-                                        <th class="py-3 border-0">Status</th>
-                                        <th class="py-3 border-0 text-center">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $__empty_1 = true; $__currentLoopData = $data_barang; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $barang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                                    <tr>
-                                        <td class="ps-4 fw-bold text-muted">#<?php echo e($barang->id); ?></td>
-                                        <td class="fw-semibold <?php echo e($barang->stok <= 5 ? 'text-danger' : 'text-dark'); ?>">
-                                            <?php echo e($barang->nama_barang); ?>
-
-                                        </td>
-                                        <td>
-                                            <span class="fw-bold <?php echo e($barang->stok <= 5 ? 'text-danger' : 'text-dark'); ?>">
-                                                <?php echo e($barang->stok); ?> <small class="text-muted">Unit</small>
-                                            </span>
-                                        </td>
-                                        <td class="text-success fw-bold">Rp <?php echo e(number_format($barang->harga_jual, 0, ',', '.')); ?></td>
-                                        <td>
-                                            <?php if($barang->stok <= 5): ?>
-                                                <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Kritis</span>
-                                            <?php else: ?>
-                                                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aman</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="d-flex justify-content-center gap-2">
-                                                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEdit<?php echo e($barang->id); ?>">
-                                                    <i class="fa-solid fa-pen"></i>
-                                                </button>
-                                                <form action="<?php echo e(url('admin/barang/hapus/'.$barang->id)); ?>" method="POST" onsubmit="return confirm('Hapus barang ini?')">
-                                                    <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle">
-                                                        <i class="fa-solid fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    
-                                    <?php $__env->startPush('modals'); ?>
-                                    <div class="modal fade" id="modalEdit<?php echo e($barang->id); ?>" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content border-0 shadow" style="border-radius: 20px;">
-                                                <div class="modal-header border-0 pb-0">
-                                                    <h5 class="fw-bold">Edit Barang</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <form action="<?php echo e(url('admin/barang/update/'.$barang->id)); ?>" method="POST">
-                                                    <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
-                                                    <div class="modal-body text-start">
-                                                        <div class="mb-3">
-                                                            <label class="form-label small fw-bold">Nama Barang</label>
-                                                            <input type="text" name="nama_barang" class="form-control rounded-3" value="<?php echo e($barang->nama_barang); ?>" required>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label small fw-bold">Supplier</label>
-                                                            <select name="supplier_id" class="form-select rounded-3" required>
-                                                                <?php $__currentLoopData = $data_supplier; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                    <option value="<?php echo e($s->id); ?>" <?php echo e($barang->supplier_id == $s->id ? 'selected' : ''); ?>>
-                                                                        <?php echo e($s->nama_supplier); ?>
-
-                                                                    </option>
-                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-6 mb-3">
-                                                                <label class="form-label small fw-bold">Stok</label>
-                                                                <input type="number" name="stok" class="form-control rounded-3" value="<?php echo e($barang->stok); ?>" required>
-                                                            </div>
-                                                            <div class="col-6 mb-3">
-                                                                <label class="form-label small fw-bold">Harga Jual</label>
-                                                                <input type="number" name="harga_jual" class="form-control rounded-3" value="<?php echo e($barang->harga_jual); ?>" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer border-0 pt-0">
-                                                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Update Barang</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php $__env->stopPush(); ?>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                                    <tr><td colspan="6" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                    <?php elseif(request('supplier_id')): ?>
+                        <div class="mb-3">
+                            <a href="<?php echo e(url('admin/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
+                            </a>
                         </div>
-                    </div>
+                        <div class="stat-card border-0 shadow-sm p-4 bg-white rounded-4">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="py-3 ps-4 border-0">ID</th>
+                                            <th class="py-3 border-0">Nama Barang</th>
+                                            <th class="py-3 border-0">Stok</th>
+                                            <th class="py-3 border-0">Harga Jual</th>
+                                            <th class="py-3 border-0">Status</th>
+                                            <th class="py-3 border-0 text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $__empty_1 = true; $__currentLoopData = $data_barang; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $barang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                            <tr>
+                                                <td class="ps-4 fw-bold text-muted">#<?php echo e($barang->id); ?></td>
+                                                <td class="fw-semibold <?php echo e($barang->stok <= 5 ? 'text-danger' : 'text-dark'); ?>"><?php echo e($barang->nama_barang); ?></td>
+                                                <td>
+                                                    <span class="fw-bold <?php echo e($barang->stok <= 5 ? 'text-danger' : 'text-dark'); ?>">
+                                                        <?php echo e($barang->stok); ?> <small class="text-muted">Unit</small>
+                                                    </span>
+                                                </td>
+                                                <td class="text-success fw-bold">Rp <?php echo e(number_format($barang->harga_jual, 0, ',', '.')); ?></td>
+                                                <td>
+                                                    <span class="badge <?php echo e($barang->stok <= 5 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success'); ?> px-3 py-2 rounded-pill">
+                                                        <?php echo e($barang->stok <= 5 ? 'Kritis' : 'Aman'); ?>
+
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex justify-content-center gap-2">
+                                                        <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEdit<?php echo e($barang->id); ?>">
+                                                            <i class="fa-solid fa-pen"></i>
+                                                        </button>
+                                                        <form action="<?php echo e(url('admin/barang/hapus/'.$barang->id)); ?>" method="POST">
+                                                            <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle" onclick="return confirm('Hapus?')">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            
+                                            <?php $__env->startPush('modals'); ?>
+                                                <div class="modal fade" id="modalEdit<?php echo e($barang->id); ?>" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content border-0 shadow" style="border-radius: 20px;">
+                                                            <div class="modal-header border-0 pb-0">
+                                                                <h5 class="fw-bold">Edit Barang</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <form action="<?php echo e(url('admin/barang/update/'.$barang->id)); ?>" method="POST">
+                                                                <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
+                                                                <div class="modal-body text-start">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label small fw-bold">Nama Barang</label>
+                                                                        <input type="text" name="nama_barang" class="form-control rounded-3" value="<?php echo e($barang->nama_barang); ?>" required>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label small fw-bold">Supplier</label>
+                                                                        <select name="supplier_id" class="form-select rounded-3">
+                                                                            <?php $__currentLoopData = $data_supplier; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                                <option value="<?php echo e($s->id); ?>" <?php echo e($barang->supplier_id == $s->id ? 'selected' : ''); ?>><?php echo e($s->nama_supplier); ?></option>
+                                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6 mb-3">
+                                                                            <label class="form-label small fw-bold">Stok</label>
+                                                                            <input type="number" name="stok" class="form-control rounded-3" value="<?php echo e($barang->stok); ?>" required>
+                                                                        </div>
+                                                                        <div class="col-6 mb-3">
+                                                                            <label class="form-label small fw-bold">Harga Jual</label>
+                                                                            <input type="number" name="harga_jual" class="form-control rounded-3" value="<?php echo e($barang->harga_jual); ?>" required>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer border-0 pt-0">
+                                                                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+                                                                    <button type="submit" class="btn btn-primary rounded-pill px-4">Update Barang</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php $__env->stopPush(); ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                            <tr><td colspan="6" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    
+                    <?php elseif(request('status') == 'kritis'): ?>
+                        <div class="mb-3">
+                            <a href="<?php echo e(url('admin/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Menu Utama
+                            </a>
+                        </div>
+                        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="fw-bold mb-0 text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Daftar Stok Hampir Habis</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="ps-4">Nama Barang</th>
+                                                <th>Stok Tersisa</th>
+                                                <th>Supplier</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $__currentLoopData = $barangs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <tr>
+                                                    <td class="ps-4 fw-semibold"><?php echo e($item->nama_barang); ?></td>
+                                                    <td><span class="badge bg-danger px-3 py-2 rounded-pill"><?php echo e($item->stok); ?> Unit</span></td>
+                                                    <td><?php echo e($item->supplier->nama_supplier ?? '-'); ?></td>
+                                                </tr>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     <?php endif; ?>
 
+                    
                     <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content border-0 shadow" style="border-radius: 20px;">
@@ -475,7 +522,7 @@
                                             <div class="col-6 mb-3"><label class="form-label small fw-bold">Harga Jual</label><input type="number" name="harga_jual" class="form-control rounded-3" required></div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer border-0 pt-0 text-center">
+                                    <div class="modal-footer border-0 pt-0">
                                         <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
                                         <button type="submit" class="btn btn-primary rounded-pill px-4">Simpan Barang</button>
                                     </div>
@@ -483,6 +530,7 @@
                             </div>
                         </div>
                     </div>
+
                 <?php endif; ?>
 
                 <!-- Supplier -->
