@@ -7,7 +7,6 @@ use App\Models\Supplier;
 use App\Models\Penjualan;
 use App\Models\PenjualanDetail;
 use App\Models\BarangMasuk;
-use App\Models\NotifikasiStok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,27 +18,24 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         // --- Inisialisasi Parameter Filter ---
-        $bulanInput = $request->get('bulan', date('Y-m')); // Digunakan untuk input month lama
-        $bulan      = $request->get('bulan', date('m'));   // Untuk filter bulan terpisah
-        $tahun      = $request->get('tahun', date('Y'));   // Untuk filter tahun terpisah
+        $bulanInput = $request->get('bulan', date('Y-m')); 
+        $bulan      = $request->get('bulan', date('m')); 
+        $tahun      = $request->get('tahun', date('Y')); 
         $from       = $request->get('from');
         $to         = $request->get('to');
 
         // --- Logika Laporan Mutasi Stok ---
         $laporans = Barang::all()->map(function ($barang) use ($tahun, $bulan) {
-            // Hitung total masuk di periode terpilih
             $masuk = BarangMasuk::where('barang_id', $barang->id)
                         ->whereYear('tanggal', $tahun)
                         ->whereMonth('tanggal', $bulan)
                         ->sum('jumlah');
 
-            // Hitung total keluar di periode terpilih
             $keluar = PenjualanDetail::where('barang_id', $barang->id)
                         ->whereYear('created_at', $tahun)
                         ->whereMonth('created_at', $bulan)
                         ->sum('qty');
 
-            // Stok Akhir (Angka saat ini di DB) & Stok Awal (Hitung Mundur)
             $stok_akhir = $barang->stok; 
             $stok_awal  = $stok_akhir - $masuk + $keluar;
 
@@ -63,28 +59,19 @@ class AdminController extends Controller
             ]);
         }
         
-        // Data untuk tabel transaksi (Pagination)
         $transaksis = (clone $query_penjualan)->paginate(10);
-        
-        // Hitung total volume terjual berdasarkan filter
         $total_terjual = (clone $query_penjualan)->sum('qty');
 
         // --- Data Statistik Dashboard ---
         $total_barang   = Barang::count();
         $total_supplier = Supplier::count();
-        $rusak          = Barang::where('stok', '<=', 5)->count();
+        $rusak          = Barang::where('stok', '<=', 5)->count(); // INI TETAP ADA UNTUK CARD
         $baik           = Barang::where('stok', '>', 5)->count();
         $grafik         = Barang::orderBy('stok', 'desc')->take(5)->get();
         
-        // --- Data Master & Notifikasi ---
+        // --- Data Master ---
         $data_barang    = Barang::latest()->get();
         $data_supplier  = Supplier::latest()->get();
-        $notif_list     = NotifikasiStok::with('barang')
-                        ->whereHas('barang')
-                        ->where('is_read', false) 
-                        ->latest()
-                        ->get();
-        $notif_count    = $notif_list->count();
 
         // --- Data Laporan Lain-lain ---
         $data_penjualan       = Penjualan::latest()->get();
@@ -109,10 +96,10 @@ class AdminController extends Controller
             return $query->where('supplier_id', $supplierId);
         })->get();
 
-        // --- Pengembalian View ---
+        // --- Pengembalian View (Sudah Dihapus notif_list & notif_count) ---
         return view('dashboard.admin', compact(
             'total_barang', 'total_supplier', 'rusak', 'baik', 
-            'grafik', 'data_barang', 'data_barang_tersedia', 'data_supplier', 'notif_list','notif_count', 'data_penjualan',
+            'grafik', 'data_barang', 'data_barang_tersedia', 'data_supplier', 'data_penjualan',
             'laporan_stok', 'laporan_penjualan', 'all_barangs', 'laporans',
             'transaksis', 'barangs', 'total_aset', 'suppliers', 'total_terjual', 
             'bulanInput', 'laporans_stok', 'from', 'to', 'bulan', 'tahun'
@@ -144,14 +131,6 @@ class AdminController extends Controller
             'harga_beli'  => $request->harga_jual,
         ]);
 
-        // Cek Notifikasi Stok Menipis
-        if ($barang->stok <= 5) {
-            NotifikasiStok::updateOrCreate(
-                ['barang_id' => $barang->id],
-                ['stok_sekarang' => $barang->stok, 'is_read' => false]
-            );
-        }
-
         return redirect()->back()->with('success', 'Barang berhasil ditambah!');
     }
 
@@ -177,25 +156,12 @@ class AdminController extends Controller
             ]);
         }
 
-        // Kelola Notifikasi Stok
-        if ($barang->stok <= 5) {
-            NotifikasiStok::updateOrCreate(
-                ['barang_id' => $barang->id],
-                ['stok_sekarang' => $barang->stok, 'is_read' => false, 'updated_at' => now()]
-            );
-        } else {
-            NotifikasiStok::where('barang_id', $barang->id)->delete();
-        }
-
         return redirect()->back()->with('success', 'Barang berhasil diupdate dan mutasi dicatat!');
     }
 
     public function destroyBarang($id) 
     {
-        DB::transaction(function () use ($id) {
-            NotifikasiStok::where('barang_id', $id)->delete();
-            Barang::destroy($id);
-        });
+        Barang::destroy($id);
         return redirect()->back()->with('success', 'Barang berhasil dihapus!');
     }
 
@@ -232,12 +198,5 @@ class AdminController extends Controller
                       ->get();
 
         return view('dashboard.admin', compact('transaksis'));
-    }
-
-    
-    // Fungsi baru untuk menghilangkan angka saat lonceng diklik
-    public function markAsRead() {
-        NotifikasiStok::where('is_read', false)->update(['is_read' => true]);
-        return response()->json(['success' => true]);
     }
 }

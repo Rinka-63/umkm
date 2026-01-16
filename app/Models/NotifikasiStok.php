@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class NotifikasiStok extends Model
 {
     protected $table = 'notifikasi_stok';
-    protected $fillable = ['barang_id', 'stok_sekarang', 'stok_minimum', 'is_read'];
+    protected $fillable = ['barang_id', 'stok_sekarang', 'is_read'];
 
     public function barang()
     {

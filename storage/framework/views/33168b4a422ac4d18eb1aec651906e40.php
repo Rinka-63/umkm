@@ -186,26 +186,26 @@
                 </div>
                 <div class="text-end d-none d-md-block">
                     <div id="clock" class="fw-bold fs-5"></div>
-                    <div class="small opacity-75">{{ date('l, d F Y') }}</div>
+                    <div class="small opacity-75"><?php echo e(date('l, d F Y')); ?></div>
                 </div>
             </header>
 
             <!-- Navbar -->
             <nav class="navbar-card mb-4">
                 <div class="d-flex gap-1">
-                    <a href="{{ route('admin.beranda') }}" class="nav-link-item {{ request()->routeIs('admin.beranda') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.beranda')); ?>" class="nav-link-item <?php echo e(request()->routeIs('admin.beranda') ? 'active' : ''); ?>">
                         <i class="fa-solid fa-house"></i> Beranda
                     </a>
-                    <a href="{{ route('admin.barang') }}" class="nav-link-item {{ request()->routeIs('admin.barang*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.barang')); ?>" class="nav-link-item <?php echo e(request()->routeIs('admin.barang*') ? 'active' : ''); ?>">
                         <i class="fa-solid fa-box"></i> Barang
                     </a>
-                    <a href="{{ route('admin.supplier') }}" class="nav-link-item {{ request()->routeIs('admin.supplier*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.supplier')); ?>" class="nav-link-item <?php echo e(request()->routeIs('admin.supplier*') ? 'active' : ''); ?>">
                         <i class="fa-solid fa-truck"></i> Supplier
                     </a>
-                    <a href="{{ route('admin.riwayat') }}" class="nav-link-item {{ request()->routeIs('admin.riwayat*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.riwayat')); ?>" class="nav-link-item <?php echo e(request()->routeIs('admin.riwayat*') ? 'active' : ''); ?>">
                         <i class="fa-solid fa-money-bill-wave"></i> Transaksi
                     </a>
-                    <a href="{{ route('admin.laporan') }}" class="nav-link-item {{ request()->routeIs('admin.laporan*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.laporan')); ?>" class="nav-link-item <?php echo e(request()->routeIs('admin.laporan*') ? 'active' : ''); ?>">
                         <i class="fa-solid fa-file-invoice"></i> Laporan
                     </a>
                 </div>
@@ -213,11 +213,11 @@
                 <div class="d-flex align-items-center gap-3">
                     <div class="ps-3 border-start d-flex align-items-center gap-3">
                         <div class="text-end d-none d-sm-block">
-                            <div class="fw-bold small text-dark">{{ auth()->user()->username }}</div>
-                            <div class="text-muted" style="font-size: 0.7rem;">{{ strtoupper(auth()->user()->role) }}</div>
+                            <div class="fw-bold small text-dark"><?php echo e(auth()->user()->username); ?></div>
+                            <div class="text-muted" style="font-size: 0.7rem;"><?php echo e(strtoupper(auth()->user()->role)); ?></div>
                         </div>
-                        <form action="{{ route('logout') }}" method="POST" class="m-0">
-                            @csrf
+                        <form action="<?php echo e(route('logout')); ?>" method="POST" class="m-0">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="btn btn-outline-danger border-0 rounded-circle p-2" title="Logout">
                                 <i class="fa-solid fa-power-off"></i>
                             </button>
@@ -229,29 +229,29 @@
             <main>
 
                 <!-- Beranda -->
-                @if(request()->is('admin/beranda'))
+                <?php if(request()->is('admin/beranda')): ?>
                     <div class="row g-4 mb-4">
                         <div class="col-md-3">
                             <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">DATA BARANG</p><h3 class="fw-bold m-0">{{ $total_barang ?? 0 }}</h3></div>
+                                <div><p class="text-muted small fw-bold mb-1">DATA BARANG</p><h3 class="fw-bold m-0"><?php echo e($total_barang ?? 0); ?></h3></div>
                                 <div class="icon-box bg-primary-subtle text-primary"><i class="fa-solid fa-laptop"></i></div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p><h3 class="fw-bold m-0">{{ $total_supplier ?? 0 }}</h3></div>
+                                <div><p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p><h3 class="fw-bold m-0"><?php echo e($total_supplier ?? 0); ?></h3></div>
                                 <div class="icon-box bg-success-subtle text-success"><i class="fa-solid fa-truck"></i></div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-card d-flex justify-content-between">
-                                <div><p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p><h3 class="fw-bold m-0 text-info">{{ $total_terjual ?? 0 }}</h3></div>
+                                <div><p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p><h3 class="fw-bold m-0 text-info"><?php echo e($total_terjual ?? 0); ?></h3></div>
                                 <div class="icon-box bg-info-subtle text-info"><i class="fa-solid fa-cart-shopping"></i></div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
-                                <div><p class="text-muted small fw-bold mb-1">STOK KRITIS</p><h3 class="fw-bold m-0 text-danger">{{ $rusak ?? 0 }}</h3></div>
+                                <div><p class="text-muted small fw-bold mb-1">STOK KRITIS</p><h3 class="fw-bold m-0 text-danger"><?php echo e($rusak ?? 0); ?></h3></div>
                                 <div class="icon-box bg-danger-subtle text-danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
                             </div>
                         </div>
@@ -273,16 +273,17 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
                 
                 <!-- Barang -->
-                @if(request()->is('admin/barang*'))
+                <?php if(request()->is('admin/barang*')): ?>
                     
-                    @if(session('success'))
+                    <?php if(session('success')): ?>
                         <div class="alert alert-success border-0 shadow-sm rounded-4 mb-4">
-                            <i class="fa-solid fa-circle-check me-2"></i> {{ session('success') }}
+                            <i class="fa-solid fa-circle-check me-2"></i> <?php echo e(session('success')); ?>
+
                         </div>
-                    @endif
+                    <?php endif; ?>
 
                     <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
                         <div class="card-body p-3">
@@ -293,20 +294,21 @@
                                     </div>
                                     <div>
                                         <h4 class="fw-bold text-dark mb-0">
-                                            {{ request('supplier_id') ? ($data_barang->first()?->supplier?->nama_supplier ?? 'Detail Barang') : 'Pilih Supplier' }}
+                                            <?php echo e(request('supplier_id') ? ($data_barang->first()?->supplier?->nama_supplier ?? 'Detail Barang') : 'Pilih Supplier'); ?>
+
                                         </h4>
                                         <p class="text-muted small mb-0">Pantau stok berdasarkan sumber pengiriman barang</p>
                                     </div>
                                 </div>
 
                                 <div class="d-flex gap-2">
-                                    @if(request('supplier_id'))
-                                    @else
-                                        {{-- Tombol Tambah Barang HANYA muncul di halaman pertama (Pilih Supplier) --}}
+                                    <?php if(request('supplier_id')): ?>
+                                    <?php else: ?>
+                                        
                                         <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
                                             <i class="fa-solid fa-plus me-2"></i>Tambah Barang
                                         </button>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -314,34 +316,34 @@
                     </div>
                 
 
-                    <!-- Kotak Supplier -->
-                    @if(!request('supplier_id'))
+                    
+                    <?php if(!request('supplier_id')): ?>
                         <div class="row g-3">
-                            @foreach($suppliers as $s)
+                            <?php $__currentLoopData = $suppliers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="col-md-4">
-                                <a href="{{ url('admin/barang?supplier_id='.$s->id) }}" class="text-decoration-none">
+                                <a href="<?php echo e(url('admin/barang?supplier_id='.$s->id)); ?>" class="text-decoration-none">
                                     <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
                                         <div class="d-flex align-items-center">
                                             <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
                                                 <i class="fa-solid fa-truck-ramp-box fs-3"></i>
                                             </div>
                                             <div>
-                                                <h5 class="fw-bold mb-0 text-dark">{{ $s->nama_supplier }}</h5>
+                                                <h5 class="fw-bold mb-0 text-dark"><?php echo e($s->nama_supplier); ?></h5>
                                                 <span class="badge bg-light text-dark border mt-1">
-                                                    {{ $s->barangs_count }} Jenis Barang
+                                                    <?php echo e($s->barangs_count); ?> Jenis Barang
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
                                 </a>
                             </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
 
-                    <!-- Tabel barang -->
-                    @else
+                    
+                    <?php else: ?>
                     <div class="mb-3">
-                        <a href="{{ url('admin/barang') }}" class="btn btn-sm btn-primary border rounded-pill px-3">
+                        <a href="<?php echo e(url('admin/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
                             <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
                         </a>
                     </div>
@@ -360,32 +362,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($data_barang as $barang)
+                                    <?php $__empty_1 = true; $__currentLoopData = $data_barang; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $barang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr>
-                                        <td class="ps-4 fw-bold text-muted">#{{ $barang->id }}</td>
-                                        <td class="fw-semibold {{ $barang->stok <= 5 ? 'text-danger' : 'text-dark' }}">
-                                            {{ $barang->nama_barang }}
+                                        <td class="ps-4 fw-bold text-muted">#<?php echo e($barang->id); ?></td>
+                                        <td class="fw-semibold <?php echo e($barang->stok <= 5 ? 'text-danger' : 'text-dark'); ?>">
+                                            <?php echo e($barang->nama_barang); ?>
+
                                         </td>
                                         <td>
-                                            <span class="fw-bold {{ $barang->stok <= 5 ? 'text-danger' : 'text-dark' }}">
-                                                {{ $barang->stok }} <small class="text-muted">Unit</small>
+                                            <span class="fw-bold <?php echo e($barang->stok <= 5 ? 'text-danger' : 'text-dark'); ?>">
+                                                <?php echo e($barang->stok); ?> <small class="text-muted">Unit</small>
                                             </span>
                                         </td>
-                                        <td class="text-success fw-bold">Rp {{ number_format($barang->harga_jual, 0, ',', '.') }}</td>
+                                        <td class="text-success fw-bold">Rp <?php echo e(number_format($barang->harga_jual, 0, ',', '.')); ?></td>
                                         <td>
-                                            @if($barang->stok <= 5)
+                                            <?php if($barang->stok <= 5): ?>
                                                 <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Kritis</span>
-                                            @else
+                                            <?php else: ?>
                                                 <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aman</span>
-                                            @endif
+                                            <?php endif; ?>
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
-                                                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $barang->id }}">
+                                                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEdit<?php echo e($barang->id); ?>">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </button>
-                                                <form action="{{ url('admin/barang/hapus/'.$barang->id) }}" method="POST" onsubmit="return confirm('Hapus barang ini?')">
-                                                    @csrf @method('DELETE')
+                                                <form action="<?php echo e(url('admin/barang/hapus/'.$barang->id)); ?>" method="POST" onsubmit="return confirm('Hapus barang ini?')">
+                                                    <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                                     <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
@@ -394,40 +397,41 @@
                                         </td>
                                     </tr>
 
-                                    <!-- Modal Edit -->
-                                    @push('modals')
-                                    <div class="modal fade" id="modalEdit{{ $barang->id }}" tabindex="-1" aria-hidden="true">
+                                    
+                                    <?php $__env->startPush('modals'); ?>
+                                    <div class="modal fade" id="modalEdit<?php echo e($barang->id); ?>" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content border-0 shadow" style="border-radius: 20px;">
                                                 <div class="modal-header border-0 pb-0">
                                                     <h5 class="fw-bold">Edit Barang</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
-                                                <form action="{{ url('admin/barang/update/'.$barang->id) }}" method="POST">
-                                                    @csrf @method('PUT')
+                                                <form action="<?php echo e(url('admin/barang/update/'.$barang->id)); ?>" method="POST">
+                                                    <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
                                                     <div class="modal-body text-start">
                                                         <div class="mb-3">
                                                             <label class="form-label small fw-bold">Nama Barang</label>
-                                                            <input type="text" name="nama_barang" class="form-control rounded-3" value="{{ $barang->nama_barang }}" required>
+                                                            <input type="text" name="nama_barang" class="form-control rounded-3" value="<?php echo e($barang->nama_barang); ?>" required>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label small fw-bold">Supplier</label>
                                                             <select name="supplier_id" class="form-select rounded-3" required>
-                                                                @foreach($data_supplier as $s)
-                                                                    <option value="{{ $s->id }}" {{ $barang->supplier_id == $s->id ? 'selected' : '' }}>
-                                                                        {{ $s->nama_supplier }}
+                                                                <?php $__currentLoopData = $data_supplier; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                    <option value="<?php echo e($s->id); ?>" <?php echo e($barang->supplier_id == $s->id ? 'selected' : ''); ?>>
+                                                                        <?php echo e($s->nama_supplier); ?>
+
                                                                     </option>
-                                                                @endforeach
+                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                             </select>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-6 mb-3">
                                                                 <label class="form-label small fw-bold">Stok</label>
-                                                                <input type="number" name="stok" class="form-control rounded-3" value="{{ $barang->stok }}" required>
+                                                                <input type="number" name="stok" class="form-control rounded-3" value="<?php echo e($barang->stok); ?>" required>
                                                             </div>
                                                             <div class="col-6 mb-3">
                                                                 <label class="form-label small fw-bold">Harga Jual</label>
-                                                                <input type="number" name="harga_jual" class="form-control rounded-3" value="{{ $barang->harga_jual }}" required>
+                                                                <input type="number" name="harga_jual" class="form-control rounded-3" value="<?php echo e($barang->harga_jual); ?>" required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -439,31 +443,31 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endpush
-                                    @empty
+                                    <?php $__env->stopPush(); ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr><td colspan="6" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
-                                    @endforelse
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?>
 
                     <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content border-0 shadow" style="border-radius: 20px;">
                                 <div class="modal-header border-0"><h5 class="fw-bold">Tambah Barang</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                                <form action="{{ url('admin/barang/simpan') }}" method="POST">
-                                    @csrf
+                                <form action="<?php echo e(url('admin/barang/simpan')); ?>" method="POST">
+                                    <?php echo csrf_field(); ?>
                                     <div class="modal-body">
                                         <div class="mb-3"><label class="form-label small fw-bold">Nama Barang</label><input type="text" name="nama_barang" class="form-control rounded-3" placeholder="..." required></div>
                                         <div class="mb-3">
                                             <label class="form-label small fw-bold">Pilih Supplier</label>
                                             <select name="supplier_id" class="form-select rounded-3" required>
                                                 <option value="">-- Pilih Supplier --</option>
-                                                @foreach($data_supplier as $s)
-                                                    <option value="{{ $s->id }}">{{ $s->nama_supplier }}</option>
-                                                @endforeach
+                                                <?php $__currentLoopData = $data_supplier; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($s->id); ?>"><?php echo e($s->nama_supplier); ?></option>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
                                         </div>
                                         <div class="row">
@@ -479,15 +483,16 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Supplier -->
-                @if(request()->is('admin/supplier*')) 
-                    @if(session('success'))
+                <?php if(request()->is('admin/supplier*')): ?> 
+                    <?php if(session('success')): ?>
                         <div class="alert alert-success border-0 shadow-sm rounded-4 mb-4">
-                            <i class="fa-solid fa-circle-check me-2"></i> {{ session('success') }}
+                            <i class="fa-solid fa-circle-check me-2"></i> <?php echo e(session('success')); ?>
+
                         </div>
-                    @endif
+                    <?php endif; ?>
 
                     <div class="stat-card border-0 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -512,19 +517,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($data_supplier as $s)
+                                    <?php $__empty_1 = true; $__currentLoopData = $data_supplier; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr>
-                                        <td class="ps-4 text-muted">#{{ $s->id }}</td>
-                                        <td><div class="fw-bold">{{ $s->nama_supplier }}</div></td>
-                                        <td>{{ $s->no_hp }}</td>
-                                        <td>{{ $s->alamat }}</td>
+                                        <td class="ps-4 text-muted">#<?php echo e($s->id); ?></td>
+                                        <td><div class="fw-bold"><?php echo e($s->nama_supplier); ?></div></td>
+                                        <td><?php echo e($s->no_hp); ?></td>
+                                        <td><?php echo e($s->alamat); ?></td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
-                                                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEditSupplier{{ $s->id }}">
+                                                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#modalEditSupplier<?php echo e($s->id); ?>">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </button>
-                                                <form action="{{ url('admin/supplier/hapus/'.$s->id) }}" method="POST" onsubmit="return confirm('Hapus supplier ini?')">
-                                                    @csrf @method('DELETE')
+                                                <form action="<?php echo e(url('admin/supplier/hapus/'.$s->id)); ?>" method="POST" onsubmit="return confirm('Hapus supplier ini?')">
+                                                    <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                                     <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
@@ -533,28 +538,28 @@
                                         </td>
                                     </tr>
 
-                                    @push('modals')
-                                    <div class="modal fade" id="modalEditSupplier{{ $s->id }}" tabindex="-1" aria-hidden="true">
+                                    <?php $__env->startPush('modals'); ?>
+                                    <div class="modal fade" id="modalEditSupplier<?php echo e($s->id); ?>" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered text-start">
                                             <div class="modal-content border-0 shadow" style="border-radius: 20px;">
                                                 <div class="modal-header border-0 pb-0">
                                                     <h5 class="fw-bold">Edit Supplier</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
-                                                <form action="{{ url('admin/supplier/update/'.$s->id) }}" method="POST">
-                                                    @csrf @method('PUT')
+                                                <form action="<?php echo e(url('admin/supplier/update/'.$s->id)); ?>" method="POST">
+                                                    <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
                                                     <div class="modal-body">
                                                         <div class="mb-3">
                                                             <label class="form-label small fw-bold">Nama Supplier</label>
-                                                            <input type="text" name="nama_supplier" class="form-control rounded-3" value="{{ $s->nama_supplier }}" required>
+                                                            <input type="text" name="nama_supplier" class="form-control rounded-3" value="<?php echo e($s->nama_supplier); ?>" required>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label small fw-bold">Kontak</label>
-                                                            <input type="text" name="no_hp" class="form-control rounded-3" value="{{ $s->kontak }}" required>
+                                                            <input type="text" name="no_hp" class="form-control rounded-3" value="<?php echo e($s->kontak); ?>" required>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label small fw-bold">Alamat</label>
-                                                            <textarea name="alamat" class="form-control rounded-3" rows="2" required>{{ $s->alamat }}</textarea>
+                                                            <textarea name="alamat" class="form-control rounded-3" rows="2" required><?php echo e($s->alamat); ?></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer border-0">
@@ -565,10 +570,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endpush
-                                    @empty
+                                    <?php $__env->stopPush(); ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr><td colspan="5" class="text-center py-5 text-muted">Belum ada data supplier.</td></tr>
-                                    @endforelse
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
@@ -581,8 +586,8 @@
                                     <h5 class="fw-bold text-success">Tambah Supplier Baru</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
-                                <form action="{{ url('admin/supplier/simpan') }}" method="POST">
-                                    @csrf
+                                <form action="<?php echo e(url('admin/supplier/simpan')); ?>" method="POST">
+                                    <?php echo csrf_field(); ?>
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label class="form-label small fw-bold">Nama Supplier</label>
@@ -605,10 +610,10 @@
                             </div>
                         </div>
                     </div>   
-                @endif
+                <?php endif; ?>
 
                 <!-- Transaksi -->
-                @if(request()->is('admin/riwayat'))
+                <?php if(request()->is('admin/riwayat')): ?>
                     <div class="content-card">
                         <h4 class="fw-bold text-dark mb-4">Laporan Seluruh Penjualan</h4>
                         
@@ -626,29 +631,30 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($transaksis as $trx)
+                                    <?php $__currentLoopData = $transaksis; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $trx): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td><span class="badge bg-secondary">#{{ $trx->penjualan->kode_transaksi }}</span></td>
-                                        <td><span class="text-primary fw-bold">{{ $trx->penjualan->user->name ?? 'Sistem' }}</span></td>
-                                        <td>{{ $trx->penjualan->nama_pembeli }}</td>
-                                        <td>{{ $trx->barang->nama_barang }}</td>
-                                        <td class="text-center">{{ $trx->qty }}</td>
-                                        <td class="fw-bold">Rp {{ number_format($trx->subtotal, 0, ',', '.') }}</td>
-                                        <td class="small">{{ $trx->created_at->format('d/m/Y H:i') }}</td>
+                                        <td><span class="badge bg-secondary">#<?php echo e($trx->penjualan->kode_transaksi); ?></span></td>
+                                        <td><span class="text-primary fw-bold"><?php echo e($trx->penjualan->user->name ?? 'Sistem'); ?></span></td>
+                                        <td><?php echo e($trx->penjualan->nama_pembeli); ?></td>
+                                        <td><?php echo e($trx->barang->nama_barang); ?></td>
+                                        <td class="text-center"><?php echo e($trx->qty); ?></td>
+                                        <td class="fw-bold">Rp <?php echo e(number_format($trx->subtotal, 0, ',', '.')); ?></td>
+                                        <td class="small"><?php echo e($trx->created_at->format('d/m/Y H:i')); ?></td>
                                     </tr>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                             </table>
                             
                             <div class="mt-3">
-                                {{ $transaksis->links() }}
+                                <?php echo e($transaksis->links()); ?>
+
                             </div>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Laporan -->
-                @if(request()->is('admin/laporan*'))
+                <?php if(request()->is('admin/laporan*')): ?>
                     <div class="stat-card border-0 shadow-sm mb-4">
 
                         <!-- HEADER CETAK -->
@@ -674,14 +680,14 @@
                         <!-- TAB -->
                         <ul class="nav nav-pills mb-4 d-print-none">
                             <li class="nav-item">
-                                <button class="nav-link {{ !request('bulan') ? 'active' : '' }} rounded-pill px-4"
+                                <button class="nav-link <?php echo e(!request('bulan') ? 'active' : ''); ?> rounded-pill px-4"
                                     data-bs-toggle="pill"
                                     data-bs-target="#laporan-stok">
                                     Rekap Inventaris
                                 </button>
                             </li>
                             <li class="nav-item">
-                                <button class="nav-link {{ request('bulan') ? 'active' : '' }} rounded-pill px-4"
+                                <button class="nav-link <?php echo e(request('bulan') ? 'active' : ''); ?> rounded-pill px-4"
                                     data-bs-toggle="pill"
                                     data-bs-target="#laporan-mutasi">
                                     Mutasi Stok
@@ -691,23 +697,24 @@
 
                         <div class="tab-content">
                                 <!-- ================= TAB 1 : REKAP INVENTARIS ================= -->
-                        <div class="tab-pane fade {{ !request('bulan') ? 'show active' : '' }}" id="laporan-stok">
-                            @isset($barangs)
+                        <div class="tab-pane fade <?php echo e(!request('bulan') ? 'show active' : ''); ?>" id="laporan-stok">
+                            <?php if(isset($barangs)): ?>
 
                             <div class="summary-box mb-4">
                                 <div class="row text-center">
                                     <div class="col-md-4 border-end">
                                         <small class="text-muted d-block">Total Jenis Barang</small>
-                                        <h3 class="fw-bold text-dark">{{ $barangs->count() }} Item</h3>
+                                        <h3 class="fw-bold text-dark"><?php echo e($barangs->count()); ?> Item</h3>
                                     </div>
                                     <div class="col-md-4 border-end">
                                         <small class="text-muted d-block">Total Stok Tersedia</small>
-                                        <h3 class="fw-bold text-primary">{{ $barangs->sum('stok') }} Unit</h3>
+                                        <h3 class="fw-bold text-primary"><?php echo e($barangs->sum('stok')); ?> Unit</h3>
                                     </div>
                                     <div class="col-md-4">
                                         <small class="text-muted d-block">Total Nilai Aset</small>
                                         <h3 class="fw-bold text-success">
-                                            Rp {{ number_format($total_aset, 0, ',', '.') }}
+                                            Rp <?php echo e(number_format($total_aset, 0, ',', '.')); ?>
+
                                         </h3>
                                     </div>
                                 </div>
@@ -728,39 +735,40 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($barangs as $i => $b)
+                                        <?php $__currentLoopData = $barangs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $b): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <td class="text-center">{{ $i + 1 }}</td>
-                                            <td class="text-center">#BRG-{{ $b->id }}</td>
-                                            <td>{{ $b->nama_barang }}</td>
-                                            <td>{{ $b->supplier->nama_supplier ?? '-' }}</td>
-                                            <td>Rp {{ number_format($b->harga_jual,0,',','.') }}</td>
-                                            <td class="text-center fw-bold">{{ $b->stok }}</td>
+                                            <td class="text-center"><?php echo e($i + 1); ?></td>
+                                            <td class="text-center">#BRG-<?php echo e($b->id); ?></td>
+                                            <td><?php echo e($b->nama_barang); ?></td>
+                                            <td><?php echo e($b->supplier->nama_supplier ?? '-'); ?></td>
+                                            <td>Rp <?php echo e(number_format($b->harga_jual,0,',','.')); ?></td>
+                                            <td class="text-center fw-bold"><?php echo e($b->stok); ?></td>
                                             <td class="fw-bold text-primary">
-                                                Rp {{ number_format($b->stok * $b->harga_jual,0,',','.') }}
+                                                Rp <?php echo e(number_format($b->stok * $b->harga_jual,0,',','.')); ?>
+
                                             </td>
                                             <td class="text-center">
-                                                @if($b->stok <= 5)
+                                                <?php if($b->stok <= 5): ?>
                                                     <span class="badge bg-danger">Menipis</span>
-                                                @else
+                                                <?php else: ?>
                                                     <span class="badge bg-success">Aman</span>
-                                                @endif
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
 
-                            @endisset
+                            <?php endif; ?>
                         </div>
 
 
                             <!-- ================= TAB 2 : MUTASI STOK ================= -->
-                            <div class="tab-pane fade {{ request('bulan') ? 'show active' : '' }}" id="laporan-mutasi">
+                            <div class="tab-pane fade <?php echo e(request('bulan') ? 'show active' : ''); ?>" id="laporan-mutasi">
 
                                 <div class="filter-section no-print mb-4">
-                                    <form method="GET" action="{{ url()->current() }}" class="row g-3 align-items-end">
+                                    <form method="GET" action="<?php echo e(url()->current()); ?>" class="row g-3 align-items-end">
                                         <div class="col-md-3">
                                             <label class="form-label fw-bold small text-muted">Bulan</label>
                                             <div class="input-group shadow-sm">
@@ -768,11 +776,12 @@
                                                     <i class="fa-solid fa-calendar-day text-primary"></i>
                                                 </span>
                                                 <select name="bulan" class="form-select border-start-0 ps-0">
-                                                    @for($m=1; $m<=12; $m++)
-                                                        <option value="{{ $m }}" {{ request('bulan', date('m')) == $m ? 'selected' : '' }}>
-                                                            {{ Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                                                    <?php for($m=1; $m<=12; $m++): ?>
+                                                        <option value="<?php echo e($m); ?>" <?php echo e(request('bulan', date('m')) == $m ? 'selected' : ''); ?>>
+                                                            <?php echo e(Carbon\Carbon::create()->month($m)->translatedFormat('F')); ?>
+
                                                         </option>
-                                                    @endfor
+                                                    <?php endfor; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -784,11 +793,12 @@
                                                     <i class="fa-solid fa-calendar text-primary"></i>
                                                 </span>
                                                 <select name="tahun" class="form-select border-start-0 ps-0">
-                                                    @for($y=date('Y'); $y>=date('Y')-5; $y--)
-                                                        <option value="{{ $y }}" {{ request('tahun', date('Y')) == $y ? 'selected' : '' }}>
-                                                            {{ $y }}
+                                                    <?php for($y=date('Y'); $y>=date('Y')-5; $y--): ?>
+                                                        <option value="<?php echo e($y); ?>" <?php echo e(request('tahun', date('Y')) == $y ? 'selected' : ''); ?>>
+                                                            <?php echo e($y); ?>
+
                                                         </option>
-                                                    @endfor
+                                                    <?php endfor; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -797,7 +807,7 @@
                                             <button type="submit" class="btn btn-primary px-4 shadow-sm d-flex align-items-center">
                                                 <i class="fa-solid fa-filter me-2"></i> Terapkan Filter
                                             </button>
-                                            <a href="{{ route('admin.laporan') }}" class="btn btn-light border px-4 shadow-sm d-flex align-items-center">
+                                            <a href="<?php echo e(route('admin.laporan')); ?>" class="btn btn-light border px-4 shadow-sm d-flex align-items-center">
                                                 <i class="fa-solid fa-rotate-left me-2"></i> Reset
                                             </a>
                                         </div>
@@ -822,19 +832,20 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($laporans as $log)
+                                            <?php $__currentLoopData = $laporans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $log): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
-                                                <td>{{ $log->nama_barang }}</td>
-                                                <td class="text-center">{{ $log->stok_awal }}</td>
-                                                <td class="text-center text-success fw-bold">{{ $log->qty_masuk ?? 0 }}</td>
-                                                <td class="text-center text-danger fw-bold">{{ $log->qty_keluar ?? 0 }}</td>
-                                                <td class="text-center fw-bold bg-light">{{ $log->stok_akhir }}</td>
-                                                <td>Rp {{ number_format($log->harga, 0, ',', '.') }}</td>
+                                                <td><?php echo e($log->nama_barang); ?></td>
+                                                <td class="text-center"><?php echo e($log->stok_awal); ?></td>
+                                                <td class="text-center text-success fw-bold"><?php echo e($log->qty_masuk ?? 0); ?></td>
+                                                <td class="text-center text-danger fw-bold"><?php echo e($log->qty_keluar ?? 0); ?></td>
+                                                <td class="text-center fw-bold bg-light"><?php echo e($log->stok_akhir); ?></td>
+                                                <td>Rp <?php echo e(number_format($log->harga, 0, ',', '.')); ?></td>
                                                 <td class="fw-bold">
-                                                    Rp {{ number_format($log->stok_akhir * $log->harga, 0, ',', '.') }}
+                                                    Rp <?php echo e(number_format($log->stok_akhir * $log->harga, 0, ',', '.')); ?>
+
                                                 </td>
                                             </tr>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -843,7 +854,7 @@
 
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
             </main>
         </div>
@@ -851,7 +862,7 @@
         <!-- Footer -->
         <footer>
             <div class="container">
-                <strong>InvenTech</strong> &copy; {{ date('Y') }} - Sistem Inventaris Elektronika Berbasis Laravel
+                <strong>InvenTech</strong> &copy; <?php echo e(date('Y')); ?> - Sistem Inventaris Elektronika Berbasis Laravel
             </div>
         </footer>
 
@@ -880,10 +891,10 @@
                     new Chart(ctxBar, {
                         type: 'bar',
                         data: {
-                            labels: {!! json_encode(isset($grafik) ? $grafik->pluck('nama_barang') : []) !!},
+                            labels: <?php echo json_encode(isset($grafik) ? $grafik->pluck('nama_barang') : []); ?>,
                             datasets: [{ 
                                 label: 'Jumlah Unit', 
-                                data: {!! json_encode(isset($grafik) ? $grafik->pluck('stok') : []) !!}, 
+                                data: <?php echo json_encode(isset($grafik) ? $grafik->pluck('stok') : []); ?>, 
                                 backgroundColor: '#0d6efd', 
                                 borderRadius: 10,
                                 barThickness: 30
@@ -905,7 +916,7 @@
                         data: {
                             labels: ['Stok Aman', 'Stok Kritis'],
                             datasets: [{ 
-                                data: [{{ $baik ?? 0 }}, {{ $rusak ?? 0 }}], 
+                                data: [<?php echo e($baik ?? 0); ?>, <?php echo e($rusak ?? 0); ?>], 
                                 backgroundColor: ['#198754', '#ef4444'],
                                 borderWidth: 0
                             }]
@@ -932,6 +943,6 @@
 
             };
         </script>
-    @stack('modals')
+    <?php echo $__env->yieldPushContent('modals'); ?>
     </body>
-</html>
+</html><?php /**PATH E:\UMKM\resources\views/dashboard/admin.blade.php ENDPATH**/ ?>

@@ -177,33 +177,6 @@
                 </div>
                 
                 <div class="d-flex align-items-center gap-3">
-                    <div class="dropdown">
-                        <div class="position-relative cursor-pointer" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-bell fs-5 text-secondary"></i>
-                            @if($notif_count > 0)
-                                <span class="notif-pulse"></span>
-                            @endif
-                        </div>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3 p-2" style="width: 300px; border-radius: 15px;">
-                            <li class="p-2 fw-bold border-bottom mb-2 text-primary d-flex justify-content-between">
-                                <span>Pemberitahuan Stok</span>
-                                <span class="badge bg-primary-subtle text-primary rounded-pill">{{ $notif_count }}</span>
-                            </li>
-                            <div style="max-height: 300px; overflow-y: auto;">
-                                @forelse($notif_list as $n)
-                                    <li class="p-3 mb-1 small hover-bg-light rounded border-start border-4 border-warning bg-light">
-                                        <div class="fw-bold mb-1">{{ $n->barang->nama_barang ?? 'Barang Terhapus' }}</div>
-                                        <div class="text-muted">Sisa stok: <span class="text-danger fw-bold">{{ $n->stok_sekarang }}</span></div>
-                                    </li>
-                                @empty
-                                    <li class="p-4 text-center text-muted small">
-                                        <i class="fa-solid fa-check-circle text-success d-block fs-3 mb-2"></i>
-                                        Semua stok dalam kondisi aman
-                                    </li>
-                                @endforelse
-                            </div>
-                        </ul>
-                    </div>
 
                     <div class="ps-3 border-start d-flex align-items-center gap-3">
                         <div class="text-end d-none d-sm-block">
