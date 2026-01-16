@@ -299,7 +299,6 @@
                         </div>
                     <?php endif; ?>
 
-                    
                     <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between align-items-center">
@@ -323,7 +322,6 @@
                                 </div>
 
                                 <div class="d-flex gap-2">
-                                    
                                     <?php if(!request('supplier_id') && request('status') != 'kritis'): ?>
                                         <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
                                             <i class="fa-solid fa-plus me-2"></i>Tambah Barang
@@ -335,7 +333,7 @@
                         <div style="height: 4px; background: linear-gradient(to right, #0d6efd, #6610f2);"></div>
                     </div>
 
-                    
+                    <!-- Daftar Supplier -->
                     <?php if(!request('supplier_id') && request('status') != 'kritis'): ?>
                         <div class="row g-3">
                             <?php $__currentLoopData = $suppliers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -359,7 +357,7 @@
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
 
-                    
+                    <!-- Tabel Barang -->
                     <?php elseif(request('supplier_id')): ?>
                         <div class="mb-3">
                             <a href="<?php echo e(url('admin/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
@@ -411,7 +409,7 @@
                                                 </td>
                                             </tr>
 
-                                            
+                                            <!-- Modal Edit -->
                                             <?php $__env->startPush('modals'); ?>
                                                 <div class="modal fade" id="modalEdit<?php echo e($barang->id); ?>" tabindex="-1" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered">
@@ -463,7 +461,7 @@
                             </div>
                         </div>
 
-                    
+                    <!-- Stok Kritis -->
                     <?php elseif(request('status') == 'kritis'): ?>
                         <div class="mb-3">
                             <a href="<?php echo e(url('admin/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
@@ -499,7 +497,7 @@
                         </div>
                     <?php endif; ?>
 
-                    
+                    <!-- MODAL TAMBAH -->
                     <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content border-0 shadow" style="border-radius: 20px;">
