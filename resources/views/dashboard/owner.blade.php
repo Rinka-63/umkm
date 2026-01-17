@@ -195,55 +195,88 @@
 
         <main>
 
-            <!-- Beranda -->
-            @if(request()->is('owner/beranda'))
-                <div class="row g-4 mb-4">
-                    <div class="col-md-3">
-                        <div class="stat-card d-flex justify-content-between">
-                            <div><p class="text-muted small fw-bold mb-1">DATA BARANG</p><h3 class="fw-bold m-0">{{ $total_barang ?? 0 }}</h3></div>
-                            <div class="icon-box bg-primary-subtle text-primary"><i class="fa-solid fa-laptop"></i></div>
+                <!-- Beranda -->
+                @if(request()->is('owner/beranda'))
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3">
+                            <a href="{{ route('owner.barang') }}" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">DATA BARANG</p>
+                                        <h3 class="fw-bold m-0">{{ $total_barang ?? 0 }}</h3>
+                                    </div>
+                                    <div class="icon-box bg-primary-subtle text-primary">
+                                        <i class="fa-solid fa-laptop"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card d-flex justify-content-between">
-                            <div><p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p><h3 class="fw-bold m-0">{{ $total_supplier ?? 0 }}</h3></div>
-                            <div class="icon-box bg-success-subtle text-success"><i class="fa-solid fa-truck"></i></div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card d-flex justify-content-between">
-                            <div><p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p><h3 class="fw-bold m-0 text-info">{{ $total_terjual ?? 0 }}</h3></div>
-                            <div class="icon-box bg-info-subtle text-info"><i class="fa-solid fa-cart-shopping"></i></div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
-                            <div><p class="text-muted small fw-bold mb-1">STOK KRITIS</p><h3 class="fw-bold m-0 text-danger">{{ $rusak ?? 0 }}</h3></div>
-                            <div class="icon-box bg-danger-subtle text-danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row g-4">
-                    <div class="col-lg-8">
-                        <div class="stat-card">
-                            <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
-                                <i class="fa-solid fa-chart-column text-primary"></i> Stok Barang Terbanyak (Top 5)
-                            </h5>
-                            <div style="height: 300px;"><canvas id="chartStok"></canvas></div>
+                        <div class="col-md-3">
+                            <a href="{{ route('owner.barang') }}" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p>
+                                        <h3 class="fw-bold m-0">{{ $total_supplier ?? 0 }}</h3>
+                                    </div>
+                                    <div class="icon-box bg-success-subtle text-success">
+                                        <i class="fa-solid fa-truck"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-3">
+                            <a href="{{ route('owner.riwayat') }}" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p>
+                                        <h3 class="fw-bold m-0 text-info">{{ $total_terjual ?? 0 }}</h3>
+                                    </div>
+                                    <div class="icon-box bg-info-subtle text-info">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-3">
+                            <a href="{{ route('owner.barang', ['status' => 'kritis']) }}" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">STOK KRITIS</p>
+                                        <h3 class="fw-bold m-0 text-danger">{{ $rusak ?? 0 }}</h3>
+                                    </div>
+                                    <div class="icon-box bg-danger-subtle text-danger">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-lg-4">
-                        <div class="stat-card text-center">
-                            <h5 class="fw-bold mb-4">Status Persediaan</h5>
-                            <div style="height: 250px;"><canvas id="chartKondisi"></canvas></div>
+                    
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="stat-card">
+                                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-chart-column text-primary"></i> Stok Barang Terbanyak (Top 5)
+                                </h5>
+                                <div style="height: 300px;"><canvas id="chartStok"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="stat-card text-center">
+                                <h5 class="fw-bold mb-4">Status Persediaan</h5>
+                                <div style="height: 250px;"><canvas id="chartKondisi"></canvas></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endif
+                @endif
 
             <!-- Barang -->
             @if(request()->is('owner/barang*'))
+                
+                {{-- HEADER CARD --}}
                 <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
                     <div class="card-body p-2">
                         <div class="d-flex justify-content-between align-items-center">
@@ -253,89 +286,124 @@
                                 </div>
                                 <div>
                                     <h4 class="fw-bold text-dark mb-1">
-                                        {{ request('supplier_id') ? ' ' . ($data_barang->first()?->supplier?->nama_supplier ?? 'N/A') : 'Pilih Supplier' }}
+                                        @if(request('status') == 'kritis')
+                                            Stok Hampir Habis
+                                        @else
+                                            {{ request('supplier_id') ? ($data_barang->first()?->supplier?->nama_supplier ?? 'Detail Barang') : 'Pilih Supplier' }}
+                                        @endif
                                     </h4>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
-                    
                     <div style="height: 4px; background: linear-gradient(to right, #0d6efd, #6610f2);"></div>
                 </div>
-                
 
-                {{-- KONDISI 1: TAMPILAN KOTAK SUPPLIER (Jika belum pilih supplier) --}}
-                @if(!request('supplier_id'))
-                <div class="row g-3">
-                    @foreach($suppliers as $s)
-                    <div class="col-md-4">
-                        <a href="{{ url('owner/barang?supplier_id='.$s->id) }}" class="text-decoration-none">
-                            <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
-                                        <i class="fa-solid fa-truck-ramp-box fs-3"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="fw-bold mb-0 text-dark">{{ $s->nama_supplier }}</h5>
-                                        <span class="badge bg-light text-dark border mt-1">
-                                            {{ $s->barangs_count }} Jenis Barang
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                {{-- KONDISI 1: TAMPILAN STOK KRITIS --}}
+                @if(request('status') == 'kritis')
+                    <div class="mb-3">
+                        <a href="{{ url('owner/barang') }}" class="btn btn-sm btn-primary border rounded-pill px-3">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Menu Utama
                         </a>
                     </div>
-                    @endforeach
-                </div>
-
-                {{-- KONDISI 2: TAMPILAN TABEL BARANG (Jika sudah pilih supplier) --}}
-                @else
-                <div class="mb-3">
-                    <a href="{{ url('owner/barang') }}" class="btn btn-sm btn-primary border rounded-pill px-3">
-                        <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
-                    </a>
-                </div>
-
-                <div class="stat-card border-0 shadow-sm p-4 bg-white rounded-4">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th class="py-3 ps-4 border-0">ID</th>
-                                    <th class="py-3 border-0">Nama Barang</th>
-                                    <th class="py-3 border-0">Stok</th>
-                                    <th class="py-3 border-0">Harga Jual</th>
-                                    <th class="py-3 border-0">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($data_barang as $barang)
-                                <tr>
-                                    <td class="ps-4 fw-bold text-muted">#{{ $barang->id }}</td>
-                                    <td class="fw-semibold">{{ $barang->nama_barang }}</td>
-                                    <td>
-                                        <span class="fw-bold {{ $barang->stok <= 5 ? 'text-danger' : 'text-dark' }}">
-                                            {{ $barang->stok }} <small class="text-muted">Unit</small>
-                                        </span>
-                                    </td>
-                                    <td class="text-success fw-bold">Rp {{ number_format($barang->harga_jual, 0, ',', '.') }}</td>
-                                    <td>
-                                        @if($barang->stok <= 5)
-                                            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Kritis</span>
-                                        @else
-                                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aman</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr><td colspan="5" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="fw-bold mb-0 text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Daftar Stok Hampir Habis</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="ps-4">Nama Barang</th>
+                                            <th>Stok Tersisa</th>
+                                            <th>Supplier</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($barangs as $item)
+                                            <tr>
+                                                <td class="ps-4 fw-semibold">{{ $item->nama_barang }}</td>
+                                                <td><span class="badge bg-danger px-3 py-2 rounded-pill">{{ $item->stok }} Unit</span></td>
+                                                <td>{{ $item->supplier->nama_supplier ?? '-' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                {{-- KONDISI 2: TAMPILAN KOTAK SUPPLIER (Jika belum pilih supplier) --}}
+                @elseif(!request('supplier_id'))
+                    <div class="row g-3">
+                        @foreach($suppliers as $s)
+                        <div class="col-md-4">
+                            <a href="{{ url('owner/barang?supplier_id='.$s->id) }}" class="text-decoration-none">
+                                <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
+                                            <i class="fa-solid fa-truck-ramp-box fs-3"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-0 text-dark">{{ $s->nama_supplier }}</h5>
+                                            <span class="badge bg-light text-dark border mt-1">
+                                                {{ $s->barangs_count }} Jenis Barang
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+
+                {{-- KONDISI 3: TAMPILAN TABEL BARANG (Jika sudah pilih supplier) --}}
+                @else
+                    <div class="mb-3">
+                        <a href="{{ url('owner/barang') }}" class="btn btn-sm btn-primary border rounded-pill px-3">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
+                        </a>
+                    </div>
+
+                    <div class="stat-card border-0 shadow-sm p-4 bg-white rounded-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="py-3 ps-4 border-0">ID</th>
+                                        <th class="py-3 border-0">Nama Barang</th>
+                                        <th class="py-3 border-0">Stok</th>
+                                        <th class="py-3 border-0">Harga Jual</th>
+                                        <th class="py-3 border-0">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($data_barang as $barang)
+                                    <tr>
+                                        <td class="ps-4 fw-bold text-muted">#{{ $barang->id }}</td>
+                                        <td class="fw-semibold">{{ $barang->nama_barang }}</td>
+                                        <td>
+                                            <span class="fw-bold {{ $barang->stok <= 5 ? 'text-danger' : 'text-dark' }}">
+                                                {{ $barang->stok }} <small class="text-muted">Unit</small>
+                                            </span>
+                                        </td>
+                                        <td class="text-success fw-bold">Rp {{ number_format($barang->harga_jual, 0, ',', '.') }}</td>
+                                        <td>
+                                            @if($barang->stok <= 5)
+                                                <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Kritis</span>
+                                            @else
+                                                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aman</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr><td colspan="5" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 @endif
 
             @endif

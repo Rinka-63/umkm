@@ -211,7 +211,7 @@
                         <div class="badge bg-primary rounded-circle p-3 me-3">02</div>
                         <div>
                             <h5>Pantau Arus Barang</h5>
-                            <p class="text-secondary">Catat barang masuk dan keluar dengan satu kali klik atau scan barcode.</p>
+                            <p class="text-secondary">Catat barang masuk dan keluar dengan satu kali klik.</p>
                         </div>
                     </div>
                     <div class="mb-4 d-flex align-items-start">
@@ -231,14 +231,14 @@
             <div class="glass-container text-center py-5" data-aos="flip-up">
                 <h2 class="fw-bold mb-4">Siap Transformasi Bisnis Anda?</h2>
                 <p class="mb-5 opacity-75">Bergabunglah dengan ribuan pengusaha sukses lainnya.</p>
-                <a href="<?php echo e(route('login')); ?>" class="btn-login">Daftar Sekarang - Gratis</a>
+                <a href="<?php echo e(route('login')); ?>" class="btn-login">Coba Sekarang - Gratis</a>
             </div>
         </div>
     </section>
 
     <footer class="py-5 border-top border-secondary border-opacity-25">
         <div class="container text-center">
-            <p class="text-secondary">&copy; 2024 Inventech System. All rights reserved.</p>
+            <p class="text-secondary">&copy; 2026 Inventech System. All rights reserved.</p>
             <div class="d-flex justify-content-center gap-3 mt-3">
                 <a href="#" class="text-secondary fs-4"><i class="bi bi-instagram"></i></a>
                 <a href="#" class="text-secondary fs-4"><i class="bi bi-linkedin"></i></a>

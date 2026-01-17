@@ -16,46 +16,48 @@ class KasirController extends Controller
     // =========================================================================
     // 1. DASHBOARD UTAMA (INDEX)
     // =========================================================================
-    public function index(Request $request)
-    {
-        // --- Statistik Ringkas Dashboard ---
-        $total_barang   = Barang::count();
-        $total_supplier = Supplier::count();
-        $rusak          = Barang::where('stok', '<=', 5)->count();
-        $baik           = Barang::where('stok', '>', 5)->count();
-        $grafik         = Barang::orderBy('stok', 'desc')->take(5)->get();
+public function index(Request $request)
+{
+    // --- 1. Statistik Dasar ---
+    $total_barang   = Barang::count();
+    $total_supplier = Supplier::count();
+    $rusak          = Barang::where('stok', '<=', 5)->count();
+    $baik           = Barang::where('stok', '>', 5)->count();
+    $grafik         = Barang::orderBy('stok', 'desc')->take(5)->get();
 
-        // --- Data Master ---
-        $data_supplier  = Supplier::latest()->get();
-        $barangs        = Barang::where('stok', '>', 0)->get(); // Barang untuk pilihan kasir
-        $suppliers      = \App\Models\Supplier::withCount('barangs')->get();
+    // --- 2. UNTUK DROPDOWN TRANSAKSI KASIR ---
+    // Variabel $barangs ini JANGAN diganggu filter agar kasir tetap bisa pilih barang
+    $barangs = Barang::where('stok', '>', 0)->get(); 
 
-        // --- Riwayat Transaksi Penjualan ---
-        $transaksis = PenjualanDetail::with('barang','penjualan')
-                        ->orderBy('created_at', 'desc')
-                        ->get();
-        
-        // --- Filter Data Barang (Berdasarkan Supplier) ---
-        $supplierId  = request('supplier_id');
-        $data_barang = \App\Models\Barang::when($supplierId, function($query) use ($supplierId) {
-            return $query->where('supplier_id', $supplierId);
-        })->get();
+    // --- 3. Data Master Supplier ---
+    $suppliers = Supplier::withCount('barangs')->get();
+    
+    // --- 4. Logika Filter (Untuk Tabel & Header) ---
+    $status = $request->get('status');
+    $supplierId = $request->get('supplier_id');
 
-        // --- Filter Volume Terjual (Berdasarkan Range Tanggal) ---
-        $from = $request->from;
-        $to   = $request->to;
+    // Inisialisasi awal agar tidak "Undefined variable"
+    $data_barang = collect(); 
 
-        $total_terjual = PenjualanDetail::when($from && $to, function($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59']);
-            })
-            ->sum('qty');
-
-        return view('dashboard.kasir', compact(
-            'total_barang','total_supplier','rusak','baik',
-            'grafik','data_barang','data_supplier','barangs',
-            'transaksis','suppliers','total_terjual'
-        )); 
+    if ($status == 'kritis') {
+        $data_barang = Barang::with('supplier')->where('stok', '<=', 5)->get();
+    } elseif ($supplierId) {
+        $data_barang = Barang::with('supplier')->where('supplier_id', $supplierId)->get();
     }
+
+    // --- 5. Riwayat Transaksi ---
+    $transaksis = PenjualanDetail::with('barang','penjualan')->latest()->take(10)->get();
+    $total_terjual = PenjualanDetail::sum('qty');
+
+    // --- 6. Return View ---
+    return view('dashboard.kasir', compact(
+        'total_barang', 'total_supplier', 'rusak', 'baik', 'grafik',
+        'barangs',      // Dipakai di dropdown Kasir
+        'data_barang',   // Dipakai di Tabel Filter & Header Nama Supplier
+        'suppliers', 
+        'transaksis', 'total_terjual'
+    )); 
+}
 
     // =========================================================================
     // 2. PROSES TRANSAKSI PENJUALAN

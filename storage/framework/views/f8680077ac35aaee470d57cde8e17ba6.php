@@ -195,55 +195,88 @@
 
         <main>
 
-            <!-- Beranda -->
-            <?php if(request()->is('owner/beranda')): ?>
-                <div class="row g-4 mb-4">
-                    <div class="col-md-3">
-                        <div class="stat-card d-flex justify-content-between">
-                            <div><p class="text-muted small fw-bold mb-1">DATA BARANG</p><h3 class="fw-bold m-0"><?php echo e($total_barang ?? 0); ?></h3></div>
-                            <div class="icon-box bg-primary-subtle text-primary"><i class="fa-solid fa-laptop"></i></div>
+                <!-- Beranda -->
+                <?php if(request()->is('owner/beranda')): ?>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3">
+                            <a href="<?php echo e(route('owner.barang')); ?>" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">DATA BARANG</p>
+                                        <h3 class="fw-bold m-0"><?php echo e($total_barang ?? 0); ?></h3>
+                                    </div>
+                                    <div class="icon-box bg-primary-subtle text-primary">
+                                        <i class="fa-solid fa-laptop"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card d-flex justify-content-between">
-                            <div><p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p><h3 class="fw-bold m-0"><?php echo e($total_supplier ?? 0); ?></h3></div>
-                            <div class="icon-box bg-success-subtle text-success"><i class="fa-solid fa-truck"></i></div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card d-flex justify-content-between">
-                            <div><p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p><h3 class="fw-bold m-0 text-info"><?php echo e($total_terjual ?? 0); ?></h3></div>
-                            <div class="icon-box bg-info-subtle text-info"><i class="fa-solid fa-cart-shopping"></i></div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
-                            <div><p class="text-muted small fw-bold mb-1">STOK KRITIS</p><h3 class="fw-bold m-0 text-danger"><?php echo e($rusak ?? 0); ?></h3></div>
-                            <div class="icon-box bg-danger-subtle text-danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row g-4">
-                    <div class="col-lg-8">
-                        <div class="stat-card">
-                            <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
-                                <i class="fa-solid fa-chart-column text-primary"></i> Stok Barang Terbanyak (Top 5)
-                            </h5>
-                            <div style="height: 300px;"><canvas id="chartStok"></canvas></div>
+                        <div class="col-md-3">
+                            <a href="<?php echo e(route('owner.barang')); ?>" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">TOTAL SUPPLIER</p>
+                                        <h3 class="fw-bold m-0"><?php echo e($total_supplier ?? 0); ?></h3>
+                                    </div>
+                                    <div class="icon-box bg-success-subtle text-success">
+                                        <i class="fa-solid fa-truck"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-3">
+                            <a href="<?php echo e(route('owner.riwayat')); ?>" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">VOLUME TERJUAL</p>
+                                        <h3 class="fw-bold m-0 text-info"><?php echo e($total_terjual ?? 0); ?></h3>
+                                    </div>
+                                    <div class="icon-box bg-info-subtle text-info">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-3">
+                            <a href="<?php echo e(route('owner.barang', ['status' => 'kritis'])); ?>" class="text-decoration-none text-reset">
+                                <div class="stat-card d-flex justify-content-between border-start border-4 border-danger">
+                                    <div>
+                                        <p class="text-muted small fw-bold mb-1">STOK KRITIS</p>
+                                        <h3 class="fw-bold m-0 text-danger"><?php echo e($rusak ?? 0); ?></h3>
+                                    </div>
+                                    <div class="icon-box bg-danger-subtle text-danger">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-lg-4">
-                        <div class="stat-card text-center">
-                            <h5 class="fw-bold mb-4">Status Persediaan</h5>
-                            <div style="height: 250px;"><canvas id="chartKondisi"></canvas></div>
+                    
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="stat-card">
+                                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-chart-column text-primary"></i> Stok Barang Terbanyak (Top 5)
+                                </h5>
+                                <div style="height: 300px;"><canvas id="chartStok"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="stat-card text-center">
+                                <h5 class="fw-bold mb-4">Status Persediaan</h5>
+                                <div style="height: 250px;"><canvas id="chartKondisi"></canvas></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
 
             <!-- Barang -->
             <?php if(request()->is('owner/barang*')): ?>
+                
+                
                 <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
                     <div class="card-body p-2">
                         <div class="d-flex justify-content-between align-items-center">
@@ -253,90 +286,125 @@
                                 </div>
                                 <div>
                                     <h4 class="fw-bold text-dark mb-1">
-                                        <?php echo e(request('supplier_id') ? ' ' . ($data_barang->first()?->supplier?->nama_supplier ?? 'N/A') : 'Pilih Supplier'); ?>
+                                        <?php if(request('status') == 'kritis'): ?>
+                                            Stok Hampir Habis
+                                        <?php else: ?>
+                                            <?php echo e(request('supplier_id') ? ($data_barang->first()?->supplier?->nama_supplier ?? 'Detail Barang') : 'Pilih Supplier'); ?>
 
+                                        <?php endif; ?>
                                     </h4>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
-                    
                     <div style="height: 4px; background: linear-gradient(to right, #0d6efd, #6610f2);"></div>
                 </div>
-                
 
                 
-                <?php if(!request('supplier_id')): ?>
-                <div class="row g-3">
-                    <?php $__currentLoopData = $suppliers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <div class="col-md-4">
-                        <a href="<?php echo e(url('owner/barang?supplier_id='.$s->id)); ?>" class="text-decoration-none">
-                            <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
-                                        <i class="fa-solid fa-truck-ramp-box fs-3"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="fw-bold mb-0 text-dark"><?php echo e($s->nama_supplier); ?></h5>
-                                        <span class="badge bg-light text-dark border mt-1">
-                                            <?php echo e($s->barangs_count); ?> Jenis Barang
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                <?php if(request('status') == 'kritis'): ?>
+                    <div class="mb-3">
+                        <a href="<?php echo e(url('owner/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Menu Utama
                         </a>
                     </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                </div>
+                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="fw-bold mb-0 text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Daftar Stok Hampir Habis</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="ps-4">Nama Barang</th>
+                                            <th>Stok Tersisa</th>
+                                            <th>Supplier</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $__currentLoopData = $barangs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <tr>
+                                                <td class="ps-4 fw-semibold"><?php echo e($item->nama_barang); ?></td>
+                                                <td><span class="badge bg-danger px-3 py-2 rounded-pill"><?php echo e($item->stok); ?> Unit</span></td>
+                                                <td><?php echo e($item->supplier->nama_supplier ?? '-'); ?></td>
+                                            </tr>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                
+                <?php elseif(!request('supplier_id')): ?>
+                    <div class="row g-3">
+                        <?php $__currentLoopData = $suppliers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="col-md-4">
+                            <a href="<?php echo e(url('owner/barang?supplier_id='.$s->id)); ?>" class="text-decoration-none">
+                                <div class="card border-0 shadow-sm h-100 hover-card p-3" style="border-radius: 15px;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary-subtle p-3 rounded-4 me-3 text-primary">
+                                            <i class="fa-solid fa-truck-ramp-box fs-3"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-0 text-dark"><?php echo e($s->nama_supplier); ?></h5>
+                                            <span class="badge bg-light text-dark border mt-1">
+                                                <?php echo e($s->barangs_count); ?> Jenis Barang
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
 
                 
                 <?php else: ?>
-                <div class="mb-3">
-                    <a href="<?php echo e(url('owner/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
-                        <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
-                    </a>
-                </div>
-
-                <div class="stat-card border-0 shadow-sm p-4 bg-white rounded-4">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th class="py-3 ps-4 border-0">ID</th>
-                                    <th class="py-3 border-0">Nama Barang</th>
-                                    <th class="py-3 border-0">Stok</th>
-                                    <th class="py-3 border-0">Harga Jual</th>
-                                    <th class="py-3 border-0">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $__empty_1 = true; $__currentLoopData = $data_barang; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $barang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                                <tr>
-                                    <td class="ps-4 fw-bold text-muted">#<?php echo e($barang->id); ?></td>
-                                    <td class="fw-semibold"><?php echo e($barang->nama_barang); ?></td>
-                                    <td>
-                                        <span class="fw-bold <?php echo e($barang->stok <= 5 ? 'text-danger' : 'text-dark'); ?>">
-                                            <?php echo e($barang->stok); ?> <small class="text-muted">Unit</small>
-                                        </span>
-                                    </td>
-                                    <td class="text-success fw-bold">Rp <?php echo e(number_format($barang->harga_jual, 0, ',', '.')); ?></td>
-                                    <td>
-                                        <?php if($barang->stok <= 5): ?>
-                                            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Kritis</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aman</span>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                                <tr><td colspan="5" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                    <div class="mb-3">
+                        <a href="<?php echo e(url('owner/barang')); ?>" class="btn btn-sm btn-primary border rounded-pill px-3">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Supplier
+                        </a>
                     </div>
-                </div>
+
+                    <div class="stat-card border-0 shadow-sm p-4 bg-white rounded-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="py-3 ps-4 border-0">ID</th>
+                                        <th class="py-3 border-0">Nama Barang</th>
+                                        <th class="py-3 border-0">Stok</th>
+                                        <th class="py-3 border-0">Harga Jual</th>
+                                        <th class="py-3 border-0">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $__empty_1 = true; $__currentLoopData = $data_barang; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $barang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                    <tr>
+                                        <td class="ps-4 fw-bold text-muted">#<?php echo e($barang->id); ?></td>
+                                        <td class="fw-semibold"><?php echo e($barang->nama_barang); ?></td>
+                                        <td>
+                                            <span class="fw-bold <?php echo e($barang->stok <= 5 ? 'text-danger' : 'text-dark'); ?>">
+                                                <?php echo e($barang->stok); ?> <small class="text-muted">Unit</small>
+                                            </span>
+                                        </td>
+                                        <td class="text-success fw-bold">Rp <?php echo e(number_format($barang->harga_jual, 0, ',', '.')); ?></td>
+                                        <td>
+                                            <?php if($barang->stok <= 5): ?>
+                                                <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Kritis</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aman</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                    <tr><td colspan="5" class="text-center py-5">Supplier ini belum memiliki data barang.</td></tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 <?php endif; ?>
 
             <?php endif; ?>
