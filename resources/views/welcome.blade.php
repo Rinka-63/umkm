@@ -133,7 +133,7 @@
                         <p class="lead mb-5 opacity-75">Optimalkan stok UMKM Anda. Dari pencatatan otomatis hingga laporan real-time, kami bantu bisnis Anda naik kelas tanpa ribet manual.</p>
                         <div class="d-flex justify-content-center gap-3">
                             <a href="#fitur" class="btn btn-outline-light btn-lg rounded-pill px-4">Lihat Fitur</a>
-                            <a href="{{ route('login') }}" class="btn-login">Coba Gratis</a>
+                            <a href="{{ route('login') }}" class="btn-login">Masuk Sistem</a>
                         </div>
                     </div>
                 </div>
@@ -231,7 +231,9 @@
             <div class="glass-container text-center py-5" data-aos="flip-up">
                 <h2 class="fw-bold mb-4">Siap Transformasi Bisnis Anda?</h2>
                 <p class="mb-5 opacity-75">Bergabunglah dengan ribuan pengusaha sukses lainnya.</p>
-                <a href="{{ route('login') }}" class="btn-login">Coba Sekarang - Gratis</a>
+                <a href="https://wa.me/6285601224250?text=Halo%20Admin,%20saya%20mau%20buat%20akun%20sistem" class="btn btn-primary">
+                    Hubungi Admin untuk Akses
+                </a>
             </div>
         </div>
     </section>
