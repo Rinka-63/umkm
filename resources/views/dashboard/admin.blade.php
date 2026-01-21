@@ -164,7 +164,7 @@
                     <i class="fa-solid fa-boxes-stacked fa-2x bg-primary p-2 rounded-3 text-white"></i>
                     <div>
                         <h3 class="fw-bold m-0 text-white">InvenTech</h3>
-                        <small class="opacity-75">Sistem Inventaris Elektronika</small>
+                        <small class="opacity-75">Sistem Inventaris UMKM</small>
                     </div>
                 </div>
                 <div class="text-end d-none d-md-block">
